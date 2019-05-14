@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="hospitals_array">
+        <item>Zomba Central Hospital</item>
+        <item>Chancellor College Clinic</item>
+        <item>Chinamwali Health Centre</item>
+        <item>Zomba, Banja la Mtsogolo</item>
+        <item>Mpondabwino (Pvt) Clinic</item>
+        <item>MASM, Zomba</item>
+        <item>Ku-Chawe Clinic</item>
+        <item>More Hospitals</item>
+    </string-array>
+</resources>

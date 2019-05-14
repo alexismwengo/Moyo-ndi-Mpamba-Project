@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DoctorDetails extends AppCompatActivity {
 
@@ -37,6 +40,7 @@ public class DoctorDetails extends AppCompatActivity {
     LinearLayout email_container, phone_container, location_container;
     LinearLayout posts;
     Bundle bundle;
+    String[] name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,7 @@ public class DoctorDetails extends AppCompatActivity {
         bundle = getIntent().getExtras();
 
         doc_name.setText("Dr. "+bundle.getString("firstname")+" "+bundle.getString("lastname"));
-        doc_email.setText(bundle.getString("email"));
+        doc_email.setText(bundle.getString("doc_email"));
         doc_phone.setText(bundle.getString("phone"));
         doc_specialty.setText(bundle.getString("proffession"));
         doc_city.setText(bundle.getString("city"));
@@ -115,11 +119,57 @@ public class DoctorDetails extends AppCompatActivity {
 
             }
         });
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/AccessUserInfo.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+
+                            JSONObject jsonObject = null;
+
+                            name = new String[jsonArray.length()];
+
+                            for(int i=0; i<jsonArray.length(); i++){
+                                jsonObject = jsonArray.getJSONObject(i);
+
+                                name[i] = jsonObject.getString("name");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                , new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", bundle.getString("email"));
+                params.put("password", bundle.getString("password"));
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(getApplicationContext()).addTorequestque(stringRequest);
+
     }
 
     private void appointmentsBooker() {
+
         Intent intent = new Intent(getApplicationContext(), AppointmentBooker.class);
         Bundle outgoing_bundle;
+
         outgoing_bundle = getIntent().getExtras();
 
         outgoing_bundle.putString("username", doc_name.getText().toString());
@@ -129,6 +179,8 @@ public class DoctorDetails extends AppCompatActivity {
         outgoing_bundle.putString("email", doc_email.getText().toString());
         outgoing_bundle.putString("days_available", doc_days.getText().toString());
         outgoing_bundle.putString("hours", doc_hours.getText().toString());
+
+        outgoing_bundle.putString("user_name", name[0]);
 
         intent.putExtras(outgoing_bundle);
         startActivity(intent);

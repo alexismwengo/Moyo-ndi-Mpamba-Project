@@ -42,7 +42,7 @@ public class ActivitySignUp extends AppCompatActivity {
     private EditText nameField, emailField, passwordField, confirmPasswordField;
     private CheckBox checkbox;
     private Button signupButton;
-    private TextView terms;
+    private TextView terms, policy;
 
     private Toolbar toolbar;
 
@@ -57,6 +57,21 @@ public class ActivitySignUp extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        OnClickListener toPrivacy= new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Uri someUri = Uri.parse("http://www.moyondimpamba.com");
+                Intent i = new Intent(Intent.ACTION_VIEW, someUri);
+                startActivity(i);
+            }
+        };
+
+        terms = (TextView) findViewById(R.id.privacy_terms);
+        terms.setOnClickListener(toPrivacy);
+
+        policy = (TextView) findViewById(R.id.terms_conditions);
+        policy.setOnClickListener(toPrivacy);
+
         nameField = (EditText) findViewById(R.id.name_field);
         emailField = (EditText) findViewById(R.id.email_field);
         passwordField = (EditText) findViewById(R.id.password_field);
@@ -66,7 +81,7 @@ public class ActivitySignUp extends AppCompatActivity {
         signupButton.setEnabled(false);
         signupButton.setOnClickListener(new View.OnClickListener(){
 
-            String signerUrl = "http://41.70.35.43/registerQuerry.php";  //192.168.137.146
+            String signerUrl = "http://192.168.137.1/registerQuerry.php";  //192.168.137.146
             AlertDialog.Builder builder;
 
             @Override
@@ -171,6 +186,8 @@ public class ActivitySignUp extends AppCompatActivity {
             Uri someUri = Uri.parse("http://www.google.com");
             Intent i = new Intent(Intent.ACTION_VIEW, someUri);
             startActivity(i);
+
+            //startActivity(new Intent(ActivitySignUp.this, AppointmentBooker.class));
         }
         if(menuItem.getItemId() == android.R.id.home){
             Intent i = new Intent(ActivitySignUp.this, LoginActivity.class);

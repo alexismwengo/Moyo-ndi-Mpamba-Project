@@ -1,11 +1,13 @@
 package com.example.finalyearproject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -30,8 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +45,8 @@ public class Home extends AppCompatActivity {
     private NavigationView navigationView;
     private TextView userEmail, userName;
     private CardView localHospital, privateDoctor, myAppointments, healthTips, e_mergency;
-    private Bundle bundle;
+    private Bundle bundle, bundle2;
+    private String name[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +60,110 @@ public class Home extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        userEmail = (TextView) findViewById(R.id.user_email);
+        bundle = getIntent().getExtras();
 
+        userEmail = (TextView) findViewById(R.id.user_email);
         userName = (TextView) findViewById(R.id.user_name);
 
         localHospital = (CardView) findViewById(R.id.local_hospital);
-        privateDoctor = (CardView) findViewById(R.id.private_doctor);
-        myAppointments = (CardView) findViewById(R.id.my_appointments);
-        healthTips = (CardView) findViewById(R.id.health_tips);
-        e_mergency = (CardView) findViewById(R.id.e_mergency);
+        localHospital.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, LocalHospitals.class));
+            }
+        });
 
+        privateDoctor = (CardView) findViewById(R.id.private_doctor);
         privateDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, PrivateDoctors.class));
+                Intent intent = new Intent(Home.this, PrivateDoctors.class);
+
+                Bundle bun = getIntent().getExtras();
+
+                Bundle b = new Bundle();
+                b.putString("email", bun.getString("email"));
+                b.putString("password", bun.getString("password"));
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+
+
+
+        myAppointments = (CardView) findViewById(R.id.my_appointments);
+        myAppointments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/AccessUserInfo.php",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONArray jsonArray = new JSONArray(response);
+
+                                    JSONObject jsonObject = null;
+
+                                    name = new String[jsonArray.length()];
+
+                                    for(int i=0; i<jsonArray.length(); i++){
+                                        jsonObject = jsonArray.getJSONObject(i);
+
+                                        name[i] = jsonObject.getString("name");
+                                    }
+
+                                } catch (JSONException e) {
+                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+
+                                Intent intent = new Intent(Home.this, MyAppointments.class);
+                                Bundle bun = getIntent().getExtras();
+
+                                Bundle b = new Bundle();
+                                b.putString("name", name[0]);
+                                intent.putExtras(b);
+
+                                startActivity(intent);
+
+                                //Toast.makeText(getApplicationContext(), name[0], Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        , new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("email", bundle.getString("email"));
+                        params.put("password", bundle.getString("password"));
+                        return params;
+                    }
+                };
+                MySingleton.getInstance(getApplicationContext()).addTorequestque(stringRequest);
+
+            }
+        });
+
+        healthTips = (CardView) findViewById(R.id.health_tips);
+        healthTips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, HealthTips.class));
+            }
+        });
+
+        e_mergency = (CardView) findViewById(R.id.e_mergency);
+        e_mergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this, Emergency.class));
             }
         });
 
@@ -111,6 +206,9 @@ public class Home extends AppCompatActivity {
                 return false;
             }
         });
+
+        //userEmail.setText(email);
+        //userName = (TextView) findViewById(R.id.user_name);
 
     }
     @Override

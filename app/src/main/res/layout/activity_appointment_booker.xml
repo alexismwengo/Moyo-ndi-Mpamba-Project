@@ -4,6 +4,299 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradientbackground"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context=".AppointmentBooker">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <include
+                layout="@layout/toolbar_layout" />
+
+        <include
+                layout="@layout/second_toobar_layout" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="28dp"
+            tools:layout_editor_absoluteY="171dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_margin="3dp"
+                    android:padding="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:background="@drawable/rectangle_background"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="7dp"
+                        android:layout_marginTop="7dp"
+                        android:text="APPOINTMENT DATE"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        />
+                    <TextView
+                        android:id="@+id/show_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/ic_perm_contact_calendar"
+                        android:padding="7dp"
+                        android:layout_marginTop="10dp"
+                        android:inputType="datetime"
+                        android:hint="Select date"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="3dp"
+                    android:padding="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:background="@drawable/rectangle_background"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="7dp"
+                        android:layout_marginTop="7dp"
+                        android:text="CHOOSE SLOT"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        />
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:orientation="vertical"
+                            android:weightSum="2"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center">
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardElevation="0dp">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:gravity="center">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="MORNING"
+                                        android:layout_marginBottom="2dp"
+                                        android:padding="3dp"
+                                        />
+                                    <RadioGroup
+                                        android:id="@+id/radio_button"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="7dp"
+                                        android:orientation="horizontal">
+                                        <RadioButton
+                                            android:id="@+id/slot1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="09 - 10"/>
+                                        <RadioButton
+                                            android:id="@+id/slot2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="10 - 11"
+                                            android:layout_marginLeft="10dp"/>
+                                        <RadioButton
+                                            android:id="@+id/slot3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:text="11 - 12"/>
+                                    </RadioGroup>
+                                </LinearLayout>
+
+                            </android.support.v7.widget.CardView>
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                app:cardElevation="0dp">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:gravity="center"
+                                    android:paddingTop="4dp">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="EVENING"
+                                        android:layout_marginBottom="2dp"
+                                        android:padding="3dp"
+                                        />
+                                    <RadioGroup
+                                        android:id="@+id/radio_button2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="7dp"
+                                        android:orientation="horizontal">
+                                        <RadioButton
+                                            android:id="@+id/slot4"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="02 - 03"/>
+                                        <RadioButton
+                                            android:id="@+id/slot5"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="03 - 04"/>
+                                        <RadioButton
+                                            android:id="@+id/slot6"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="04 - 05"/>
+                                    </RadioGroup>
+                                </LinearLayout>
+
+                            </android.support.v7.widget.CardView>
+                        </LinearLayout>
+
+                    </ScrollView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line_color"
+                        android:layout_gravity="center"
+                        android:layout_margin="2dp"
+                        android:layout_marginBottom="9dp"/>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+                        <EditText
+                            android:id="@+id/patient_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:hint="PATIENT NAME"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+                        <EditText
+                            android:id="@+id/patient_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:hint="AGE"
+                            android:inputType="numberDecimal"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+                        <EditText
+                            android:id="@+id/patient_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:hint="PHONE"
+                            android:inputType="phone"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+                        <EditText
+                            android:id="@+id/patient_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:hint="ADDRESS"
+                            android:inputType="textPostalAddress"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+                        <EditText
+                            android:id="@+id/patient_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            android:hint="APPOINTMENT TOPIC"
+                            android:inputType="text"
+                            android:maxLines="3"
+                            android:gravity="top"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/booking_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="SUBMIT"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

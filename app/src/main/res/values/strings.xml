@@ -14,8 +14,8 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="report_emergency">Report Emergency</string>
     <string name="e_mergency">Emergency</string>
-    <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string name="terms_conditions"><![CDATA[I agree to the Privacy Policy and Terms & Conditions]]></string>
+    <string name="don_t_have_an_account">Do not have an account?</string>
+    <string name="terms_conditions"><![CDATA[I agree to the]]></string>
     <string name="terms_and_conditions">Terms &amp; Conditions</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -24,4 +24,14 @@
     <string name="doc_list">Available Doctors</string>
     <string name="select_doctor_to_view_more_details">Select doctor to view more details</string>
     <string name="patient_form">Booking Form</string>
+    <string name="health_tips">Health Tips</string>
+    <string name="appointments">Appointments</string>
+    <string name="health_centres">Available Health Centres</string>
+    <string name="title_activity_my_appointments">MyAppointments</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="conditions"><![CDATA[Terms & Conditions]]></string>
 </resources>

@@ -54,45 +54,60 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/loginQuerry.php",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
+                if(fieldsNotEmpty(email.getText().toString(), password.getText().toString())){
 
-                                if(response.equals("Login Unsuccessful")){
-                                    Toast.makeText(LoginActivity.this, "Incorrect email or password.", Toast.LENGTH_LONG).show();
-                                    password.setText("");
-                                    password.requestFocus();
-                                }
-                                else {
-                                    Intent intent = new Intent(LoginActivity.this, Home.class);
-                                    startActivity(intent);
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("email", email.getText().toString());
+                    bundle.putString("password", password.getText().toString());
 
-                                    email.setText("");
-                                    password.setText("");
+                    final Intent intent = new Intent(LoginActivity.this, Home.class);
 
+                    intent.putExtras(bundle);
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/loginQuerry.php",
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+
+                                    if(response.equals("Login Unsuccessful")){
+                                        Toast.makeText(LoginActivity.this, "Incorrect email or password.", Toast.LENGTH_LONG).show();
+                                        password.setText("");
+                                        password.requestFocus();
+                                    }
+                                    else {
+
+                                        startActivity(intent);
+
+                                        email.setText("");
+                                        password.setText("");
+
+                                    }
                                 }
                             }
+                            , new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error){
+                            Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                            error.printStackTrace();
+                            startActivity(intent);
                         }
-                        , new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                        startActivity(new Intent(LoginActivity.this, Home.class));
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
+                    }){
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
 
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("email", email.getText().toString().trim());
-                        params.put("password", password.getText().toString().trim());
-                        return params;
-                    }
-                };
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("email", email.getText().toString().trim());
+                            params.put("password", password.getText().toString().trim());
+                            return params;
+                        }
+                    };
 
-                MySingleton.getInstance(LoginActivity.this).addTorequestque(stringRequest);
+                    MySingleton.getInstance(LoginActivity.this).addTorequestque(stringRequest);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Provide both email and password", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -108,10 +123,16 @@ public class LoginActivity extends AppCompatActivity {
         emergency.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Toast.makeText(LoginActivity.this, "Emergency",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), Emergency.class));
             }
         });
+    }
+    public boolean fieldsNotEmpty(String one, String two){
+        Boolean toReturn = false;
+        if (one.length() != 0 && two.length() != 0){
+            toReturn = true;
+        }
+        return toReturn;
     }
 
 }

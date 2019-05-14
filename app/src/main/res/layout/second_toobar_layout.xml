@@ -37,19 +37,35 @@
             android:layout_marginLeft="10dp"
             android:gravity="start">
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/doc_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:textColor="#fff"
                     android:text="Doctor's Name"
                     android:textStyle="bold"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <TextView
+                        android:id="@+id/doc_profession"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_school2"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="8dp"
+                        android:textSize="17sp"
+                        android:textColor="#fff"
+                        android:drawablePadding="5dp"
+                        android:layout_alignParentLeft="true"
+                        android:text="Profession" />
 
                     <TextView
                         android:id="@+id/doc_location"
@@ -57,26 +73,19 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_location_on_white"
                         android:fontFamily="sans-serif-light"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:textSize="17sp"
                         android:textColor="#fff"
                         android:drawablePadding="5dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_centerInParent="true"
                         android:text="Location" />
+                </RelativeLayout>
 
 
             </LinearLayout>
 
         </RelativeLayout>
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/circle_background"
-                android:layout_marginLeft="3dp"
-                android:scaleType="center"
-                app:srcCompat="@drawable/ic_location" />
 
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.finalyearproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,16 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
 
+        <activity
+            android:name=".MyAppointments"
+            android:label="Appointments"></activity>
+
+        <activity
+            android:name=".HealthTips"
+            android:label="@string/health_tips" />
+        <activity
+            android:name=".LocalHospitals"
+            android:label="@string/health_centres" />
+        <activity
+            android:name=".Emergency"
+            android:label="@string/report_emergency" />
         <activity
             android:name=".AppointmentBooker"
-            android:label="@string/patient_form">
-        </activity>
-
-        <activity
-            android:name=".DoctorDetails" />
-
+            android:label="@string/patient_form" />
+        <activity android:name=".DoctorDetails" />
         <activity
             android:name=".PrivateDoctors"
             android:label="@string/doc_list" />

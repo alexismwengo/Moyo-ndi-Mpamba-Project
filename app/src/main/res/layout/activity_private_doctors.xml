@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/gradientbackground"
     tools:context=".PrivateDoctors">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        layout="@layout/toolbar_layout" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="3dp"
+        android:textSize="14sp"
+        app:fontFamily="sans-serif-condensed" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"
+        android:layout_gravity="center"
+        android:layout_margin="2dp"/>
+
+    <ListView
+        android:id="@+id/lview"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_width="wrap_content">
+    </ListView>
+
+</LinearLayout>

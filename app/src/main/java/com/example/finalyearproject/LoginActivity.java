@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     intent.putExtras(bundle);
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/loginQuerry.php",
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/loginQuerry.php",
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -123,7 +123,13 @@ public class LoginActivity extends AppCompatActivity {
         emergency.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                startActivity(new Intent(getApplicationContext(), Emergency.class));
+                Intent intent = new Intent(LoginActivity.this, Emergency.class);
+
+                Bundle b = new Bundle();
+                b.putString("activity", "login_activity");
+                intent.putExtras(b);
+
+                startActivity(intent);
             }
         });
     }

@@ -81,7 +81,7 @@ public class ActivitySignUp extends AppCompatActivity {
         signupButton.setEnabled(false);
         signupButton.setOnClickListener(new View.OnClickListener(){
 
-            String signerUrl = "http://192.168.137.1/registerQuerry.php";  //192.168.137.146
+            String signerUrl = "http://41.70.35.58/registerQuerry.php";  //192.168.137.146
             AlertDialog.Builder builder;
 
             @Override
@@ -190,8 +190,7 @@ public class ActivitySignUp extends AppCompatActivity {
             //startActivity(new Intent(ActivitySignUp.this, AppointmentBooker.class));
         }
         if(menuItem.getItemId() == android.R.id.home){
-            Intent i = new Intent(ActivitySignUp.this, LoginActivity.class);
-            startActivity(i);
+            onBackPressed();
         }
         if(menuItem.getItemId() == R.id.have_account){
             Intent i = new Intent(this, LoginActivity.class);

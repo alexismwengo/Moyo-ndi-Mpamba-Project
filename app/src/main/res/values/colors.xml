@@ -14,4 +14,5 @@
     <color name="greylight">#fafafa</color>
     <color name="startblue">#09c6df</color>
     <color name="endblue">#09c6df</color>
+    <color name="tabindicator_color">#2d2d2d</color>
 </resources>

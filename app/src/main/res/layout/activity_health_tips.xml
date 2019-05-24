@@ -4,10 +4,166 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradientbackground"
     tools:context=".HealthTips">
 
-    <include
-        layout="@layout/toolbar_layout" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="91dp">
+
+        <include layout="@layout/toolbar_layout" />
+
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:background="@drawable/circlebackgroundpink"
+                android:padding="10dp"
+                android:layout_centerInParent="true"
+                app:srcCompat="@drawable/ic_healing"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img"
+                android:padding="4dp"
+                android:text="Moyo ndi Mpamba (Today's tip)"
+                android:textColor="#443"
+                android:textSize="11sp"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_marginTop="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="170dp"
+                    android:background="@drawable/rectangle_darker_background"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/ttle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="brief title"
+                        android:gravity="center"
+                        android:textSize="25sp"
+                        android:padding="6dp"/>
+                    <View
+                        android:id="@+id/ln"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="2dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_below="@+id/ttle"
+                        android:padding="9dp"
+                        android:background="@color/line_color" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="\nbody\nhere"
+                        android:layout_below="@+id/ln"
+                        android:textSize="18sp"
+                        android:padding="6dp"/>
+
+                </RelativeLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Some Icon"
+                            android:fontFamily="casual"
+                            android:layout_centerInParent="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="casual"
+                            android:text="Some Icon"
+                            android:layout_alignParentRight="true"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="2dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/right_s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Source:"
+                        android:padding="2dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="#332"
+                        android:textSize="12sp"
+                        android:layout_alignParentLeft="true"/>
+
+                    <TextView
+                        android:id="@+id/healthtips_com"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:clickable="true"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="12sp"
+                        android:layout_toRightOf="@+id/right_s"
+                        android:text="dailyhealthtips.com"
+                        android:textColor="#fff"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

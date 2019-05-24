@@ -60,7 +60,7 @@ public class PrivateDoctors extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://192.168.137.1/accessDocs.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://41.70.35.58/accessDocs.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -155,8 +155,7 @@ public class PrivateDoctors extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem){
 
         if(menuItem.getItemId() == android.R.id.home){
-            Intent i = new Intent(PrivateDoctors.this, Home.class);
-            startActivity(i);
+            onBackPressed();
         }
         return true;
     }

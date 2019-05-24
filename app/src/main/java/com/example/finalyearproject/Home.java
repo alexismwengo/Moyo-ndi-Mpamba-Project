@@ -96,7 +96,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/AccessUserInfo.php",
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/AccessUserInfo.php",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -163,7 +163,13 @@ public class Home extends AppCompatActivity {
         e_mergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, Emergency.class));
+                Intent intent = new Intent(Home.this, Emergency.class);
+
+                Bundle b = new Bundle();
+                b.putString("activity", "home_activity");
+                intent.putExtras(b);
+
+                startActivity(intent);
             }
         });
 

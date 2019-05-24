@@ -64,7 +64,7 @@ public class MyAppointments extends AppCompatActivity {
 
         patientName = (TextView) findViewById(R.id.patient_name);
 
-        StringRequest stringRequest3 = new StringRequest(Request.Method.POST, "http://192.168.137.1/AccessUserAppointments.php",
+        StringRequest stringRequest3 = new StringRequest(Request.Method.POST, "http://41.70.35.58/AccessUserAppointments.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -127,19 +127,21 @@ public class MyAppointments extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                                    final String i_d = idd.getText().toString().substring(idd.getText().toString().lastIndexOf(" "));
+
                                     deleteApp = findViewById(R.id.delete_appointment);
                                     deleteApp.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Toast.makeText(getApplicationContext(), "Appointment #: "+app_id, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Appointment #: "+i_d, Toast.LENGTH_LONG).show();
 
                                             AlertDialog.Builder builder = new AlertDialog.Builder(MyAppointments.this);
                                             builder.setTitle("Confirm Delete");
-                                            builder.setMessage("Appointment id no. "+app_id+" will be deleted from the system.");
+                                            builder.setMessage("Appointment id no. "+i_d+" will be deleted from the system.");
                                             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    StringRequest stringRequest4 = new StringRequest(Request.Method.POST, "http://192.168.137.1/DeleteAppointment.php",
+                                                    StringRequest stringRequest4 = new StringRequest(Request.Method.POST, "http://41.70.35.58/DeleteAppointment.php",
                                                             new Response.Listener<String>() {
                                                                 @Override
                                                                 public void onResponse(final String response) {
@@ -167,7 +169,7 @@ public class MyAppointments extends AppCompatActivity {
                                                         protected Map<String, String> getParams() throws AuthFailureError {
 
                                                             Map<String, String> params = new HashMap<String, String>();
-                                                            params.put("appointment_id", app_id);
+                                                            params.put("appointment_id", i_d);
 
                                                             return params;
                                                         }
@@ -210,8 +212,7 @@ public class MyAppointments extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem){
 
         if(menuItem.getItemId() == android.R.id.home){
-            Intent i = new Intent(getApplicationContext(), Home.class);
-            startActivity(i);
+            onBackPressed();
         }
         return true;
     }

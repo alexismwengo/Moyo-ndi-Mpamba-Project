@@ -156,7 +156,7 @@ public class AppointmentBooker extends AppCompatActivity {
 
                 builder = new AlertDialog.Builder(AppointmentBooker.this);
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/appointmentBooker.php",
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/appointmentBooker.php",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(final String response) {
@@ -180,7 +180,7 @@ public class AppointmentBooker extends AppCompatActivity {
                                             additional_comments.setText("");
                                             radioGroup.setSelected(false);
                                             radioGroup2.setSelected(false);
-                                            startActivity(new Intent(AppointmentBooker.this, Home.class));
+                                            onBackPressed();
                                         }
                                     }
                                 });
@@ -192,7 +192,7 @@ public class AppointmentBooker extends AppCompatActivity {
                         , new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Toast.makeText(getApplicationContext(), "You have to select a time for the Appointment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         radioGroup.requestFocus();
                         error.printStackTrace();
                         //startActivity(new Intent(getApplicationContext(), Home.class));
@@ -234,8 +234,7 @@ public class AppointmentBooker extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
         if(menuItem.getItemId() == android.R.id.home){
-            Intent i = new Intent(getApplicationContext(), PrivateDoctors.class);
-            startActivity(i);
+            onBackPressed();
         }
         if(menuItem.getItemId() == R.id.photo){
             Toast.makeText(getApplicationContext(),"Photo added.", Toast.LENGTH_LONG).show();

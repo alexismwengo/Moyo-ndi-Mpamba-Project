@@ -120,7 +120,7 @@ public class DoctorDetails extends AppCompatActivity {
             }
         });
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.137.1/AccessUserInfo.php",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/AccessUserInfo.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

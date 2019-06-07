@@ -43,7 +43,7 @@ public class ActivitySignUp extends AppCompatActivity {
     private CheckBox checkbox;
     private Button signupButton;
     private TextView terms, policy;
-
+    private  Bundle bundle;
     private Toolbar toolbar;
 
     @Override
@@ -56,6 +56,9 @@ public class ActivitySignUp extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        bundle = getIntent().getExtras();
+        final String serverUrl = bundle.getString("SERVER_URL");
 
         OnClickListener toPrivacy= new View.OnClickListener(){
             @Override
@@ -80,10 +83,8 @@ public class ActivitySignUp extends AppCompatActivity {
         signupButton = (Button) findViewById(R.id.signup_button);
         signupButton.setEnabled(false);
         signupButton.setOnClickListener(new View.OnClickListener(){
-
-            String signerUrl = "http://41.70.35.58/registerQuerry.php";  //192.168.137.146
+            String signerUrl = serverUrl+"registerQuerry.php";
             AlertDialog.Builder builder;
-
             @Override
             public void onClick(View view){
 
@@ -100,8 +101,6 @@ public class ActivitySignUp extends AppCompatActivity {
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
-                                    builder.setTitle("Server Response");
-
                                     builder.setMessage(response);
                                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         @Override
@@ -186,8 +185,6 @@ public class ActivitySignUp extends AppCompatActivity {
             Uri someUri = Uri.parse("http://www.google.com");
             Intent i = new Intent(Intent.ACTION_VIEW, someUri);
             startActivity(i);
-
-            //startActivity(new Intent(ActivitySignUp.this, AppointmentBooker.class));
         }
         if(menuItem.getItemId() == android.R.id.home){
             onBackPressed();

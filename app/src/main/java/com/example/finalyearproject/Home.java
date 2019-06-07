@@ -2,6 +2,7 @@ package com.example.finalyearproject;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -46,6 +47,7 @@ public class Home extends AppCompatActivity {
     private TextView userEmail, userName;
     private CardView localHospital, privateDoctor, myAppointments, healthTips, e_mergency;
     private Bundle bundle, bundle2;
+    private String serverUrl;
     private String name[];
 
     @Override
@@ -61,6 +63,7 @@ public class Home extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         bundle = getIntent().getExtras();
+        serverUrl = bundle.getString("SERVER_URL");
 
         userEmail = (TextView) findViewById(R.id.user_email);
         userName = (TextView) findViewById(R.id.user_name);
@@ -78,12 +81,10 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Home.this, PrivateDoctors.class);
-
-                Bundle bun = getIntent().getExtras();
-
                 Bundle b = new Bundle();
-                b.putString("email", bun.getString("email"));
-                b.putString("password", bun.getString("password"));
+
+                b.putString("USERNAME", bundle.getString("USERNAME"));
+                b.putString("SERVER_URL", serverUrl);
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -96,57 +97,14 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/AccessUserInfo.php",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONArray jsonArray = new JSONArray(response);
+                Intent intent = new Intent(Home.this, MyAppointments.class);
+                Bundle b = new Bundle();
 
-                                    JSONObject jsonObject = null;
+                b.putString("USERNAME", bundle.getString("USERNAME"));
+                b.putString("SERVER_URL", serverUrl);
+                intent.putExtras(b);
 
-                                    name = new String[jsonArray.length()];
-
-                                    for(int i=0; i<jsonArray.length(); i++){
-                                        jsonObject = jsonArray.getJSONObject(i);
-
-                                        name[i] = jsonObject.getString("name");
-                                    }
-
-                                } catch (JSONException e) {
-                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-                                Intent intent = new Intent(Home.this, MyAppointments.class);
-                                Bundle bun = getIntent().getExtras();
-
-                                Bundle b = new Bundle();
-                                b.putString("name", name[0]);
-                                intent.putExtras(b);
-
-                                startActivity(intent);
-
-                                //Toast.makeText(getApplicationContext(), name[0], Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        , new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("email", bundle.getString("email"));
-                        params.put("password", bundle.getString("password"));
-                        return params;
-                    }
-                };
-                MySingleton.getInstance(getApplicationContext()).addTorequestque(stringRequest);
+                startActivity(intent);
 
             }
         });
@@ -164,9 +122,19 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Home.this, Emergency.class);
-
                 Bundle b = new Bundle();
+
                 b.putString("activity", "home_activity");
+                b.putString("SERVER_URL", serverUrl);
+                //the following if statements aren't needed.
+                //code needed is b.putString("USERNAME", bundle.getString("USERNAME"));
+                if(bundle.containsKey("USERNAME")){
+                    b.putString("USERNAME", bundle.getString("USERNAME"));
+                }
+                else {
+                    b.putString("USERNAME", "User Name");
+                }
+                //b.putString("USERNAME", bundle.getString("USERNAME"));
                 intent.putExtras(b);
 
                 startActivity(intent);
@@ -181,15 +149,10 @@ public class Home extends AppCompatActivity {
                 switch (menuItem.getItemId()){
                     case R.id.home:
                         menuItem.setChecked(true);
-                        //something here
+                        new Home();
                         drawerLayout.closeDrawers();
                         return true;
-                    case R.id.profile:
-                        menuItem.setChecked(true);
-                        //something here
-                        drawerLayout.closeDrawers();
-                        return true;
-                    case R.id.notifications:
+                    case R.id.settings:
                         menuItem.setChecked(true);
                         //something here
                         drawerLayout.closeDrawers();
@@ -236,5 +199,16 @@ public class Home extends AppCompatActivity {
             return true;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            //drawer is open so close it
+            drawerLayout.closeDrawers();
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }

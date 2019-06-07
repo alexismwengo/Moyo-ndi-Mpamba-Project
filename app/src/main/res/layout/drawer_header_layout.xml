@@ -28,13 +28,13 @@
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginTop="10dp"
-        android:textColor="#ffffffff"
+        android:textColor="#fff"
         android:clickable="true"/>
     <TextView
         android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ffffffff"
+        android:textColor="#fff"
         android:text="alexismwengo@gmail.com"/>
 
 </LinearLayout>

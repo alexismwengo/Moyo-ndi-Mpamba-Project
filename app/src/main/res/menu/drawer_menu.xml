@@ -7,14 +7,6 @@
             android:title="Home"
             android:icon="@drawable/ic_home"/>
         <item
-            android:id="@+id/profile"
-            android:title="My Profile"
-            android:icon="@drawable/ic_account_box"/>
-        <item
-            android:id="@+id/notifications"
-            android:title="Notifications"
-            android:icon="@drawable/ic_notifications"/>
-        <item
             android:id="@+id/settings"
             android:title="Settings"
             android:icon="@drawable/ic_settings"/>

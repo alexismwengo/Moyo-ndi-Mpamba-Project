@@ -59,7 +59,7 @@
                     android:gravity="center"
                     android:layout_marginTop="2dp"
                     android:textColor="#333"
-                    app:fontFamily="sans-serif-light"/>
+                    app:fontFamily="sans-serif-smallcaps"/>
 
                 <TextView
                     android:id="@+id/city"
@@ -70,7 +70,7 @@
                     android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:textColor="#333"
-                    app:fontFamily="sans-serif-light" />
+                    app:fontFamily="sans-serif-smallcaps" />
 
             </LinearLayout>
         </RelativeLayout>

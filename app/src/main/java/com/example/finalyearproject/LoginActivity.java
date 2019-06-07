@@ -13,12 +13,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email, password;
     private Button loginButton;
     private TextView sign_up, emergency;
-
+    private String ServerUrl;
     private Toolbar toolbar;
 
     @Override
@@ -41,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
+
+        ServerUrl = "http://41.70.47.134/";
 
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
@@ -56,15 +63,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(fieldsNotEmpty(email.getText().toString(), password.getText().toString())){
 
-                    final Bundle bundle = new Bundle();
-                    bundle.putString("email", email.getText().toString());
-                    bundle.putString("password", password.getText().toString());
-
                     final Intent intent = new Intent(LoginActivity.this, Home.class);
+                    final Bundle bundle = new Bundle();
+                    bundle.putString("SERVER_URL", ServerUrl);
 
-                    intent.putExtras(bundle);
-
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/loginQuerry.php",
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, ServerUrl+"testLogin.php",
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -76,6 +79,28 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                     else {
 
+                                        String r = response.substring(response.indexOf("["));
+                                        String [] name = null;
+                                        try {
+                                            JSONArray jsonArray = new JSONArray(r);
+
+                                            JSONObject jsonObject = null;
+
+                                            name = new String[jsonArray.length()];
+
+                                            for(int i=0; i<jsonArray.length(); i++){
+                                                jsonObject = jsonArray.getJSONObject(i);
+
+                                                name[i] = jsonObject.getString("name");
+                                            }
+
+                                        } catch (JSONException e) {
+                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            e.printStackTrace();
+                                        }
+
+                                        bundle.putString("USERNAME", name[0]);
+                                        intent.putExtras(bundle);
                                         startActivity(intent);
 
                                         email.setText("");
@@ -89,6 +114,9 @@ public class LoginActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error){
                             Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
                             error.printStackTrace();
+
+                            //following lines will be removed
+                            intent.putExtras(bundle);
                             startActivity(intent);
                         }
                     }){
@@ -115,7 +143,11 @@ public class LoginActivity extends AppCompatActivity {
         sign_up.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                startActivity(new Intent(LoginActivity.this, ActivitySignUp.class));
+                Intent intent = new Intent(LoginActivity.this, ActivitySignUp.class);
+                Bundle bund = new Bundle();
+                bund.putString("SERVER_URL", ServerUrl);
+                intent.putExtras(bund);
+                startActivity(intent);
             }
         });
 
@@ -127,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Bundle b = new Bundle();
                 b.putString("activity", "login_activity");
+                b.putString("SERVER_URL", ServerUrl);
                 intent.putExtras(b);
 
                 startActivity(intent);
@@ -141,4 +174,24 @@ public class LoginActivity extends AppCompatActivity {
         return toReturn;
     }
 
+    boolean twice = false;
+    @Override
+    public void onBackPressed() {
+        if(twice == true){
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            System.exit(0);
+        }
+        Toast.makeText(LoginActivity.this, "Press Back Again to Exit...", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                twice = false;
+            }
+        }, 3000);
+        twice = true;
+    }
 }

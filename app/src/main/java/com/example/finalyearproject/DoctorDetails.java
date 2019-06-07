@@ -37,9 +37,10 @@ public class DoctorDetails extends AppCompatActivity {
 
     Button bookAppointments;
     TextView doc_name, doc_email, doc_phone, doc_specialty, doc_city, doc_days, doc_hours;
-    LinearLayout email_container, phone_container, location_container;
+    //LinearLayout email_container, phone_container, location_container;
     LinearLayout posts;
     Bundle bundle;
+    private String serverUrl;
     String[] name;
 
     @Override
@@ -65,10 +66,35 @@ public class DoctorDetails extends AppCompatActivity {
         doc_hours = (TextView) findViewById(R.id.doc_hours);
 
         bundle = getIntent().getExtras();
+        serverUrl = bundle.getString("SERVER_URL");
 
         doc_name.setText("Dr. "+bundle.getString("firstname")+" "+bundle.getString("lastname"));
         doc_email.setText(bundle.getString("doc_email"));
+        doc_email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email_url = doc_email.getText().toString().trim();
+                if(email_url.length() > 0){
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email_url, null));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                }
+
+            }
+        });
         doc_phone.setText(bundle.getString("phone"));
+        doc_phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone_num = doc_phone.getText().toString().trim();
+                if(phone_num.length() > 0){
+                    Uri myUri = Uri.parse("tel:"+phone_num);
+                    startActivity(new Intent(Intent.ACTION_DIAL, myUri));
+                }
+
+            }
+        });
         doc_specialty.setText(bundle.getString("proffession"));
         doc_city.setText(bundle.getString("city"));
         doc_days.setText(bundle.getString("days_available"));
@@ -82,95 +108,12 @@ public class DoctorDetails extends AppCompatActivity {
             }
         });
 
-
-        email_container = (LinearLayout) findViewById(R.id.email_container);
-        email_container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email_url = doc_email.getText().toString().trim();
-                if(email_url.length() > 0){
-                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email_url, null));
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
-                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
-                }
-
-            }
-        });
-
-        phone_container = (LinearLayout) findViewById(R.id.phone_container);
-        phone_container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phone_num = doc_phone.getText().toString().trim();
-                if(phone_num.length() > 0){
-                    Uri myUri = Uri.parse("tel:"+phone_num);
-                    startActivity(new Intent(Intent.ACTION_DIAL, myUri));
-                }
-
-            }
-        });
-
-        location_container = (LinearLayout) findViewById(R.id.location_container);
-        location_container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String location = doc_city.getText().toString().trim();
-
-            }
-        });
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://41.70.35.58/AccessUserInfo.php",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-
-                            JSONObject jsonObject = null;
-
-                            name = new String[jsonArray.length()];
-
-                            for(int i=0; i<jsonArray.length(); i++){
-                                jsonObject = jsonArray.getJSONObject(i);
-
-                                name[i] = jsonObject.getString("name");
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                , new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error){
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("email", bundle.getString("email"));
-                params.put("password", bundle.getString("password"));
-                return params;
-            }
-        };
-
-        MySingleton.getInstance(getApplicationContext()).addTorequestque(stringRequest);
-
     }
 
     private void appointmentsBooker() {
 
         Intent intent = new Intent(getApplicationContext(), AppointmentBooker.class);
-        Bundle outgoing_bundle;
-
-        outgoing_bundle = getIntent().getExtras();
+        Bundle outgoing_bundle = getIntent().getExtras();
 
         outgoing_bundle.putString("username", doc_name.getText().toString());
         outgoing_bundle.putString("proffession", doc_specialty.getText().toString());
@@ -180,7 +123,8 @@ public class DoctorDetails extends AppCompatActivity {
         outgoing_bundle.putString("days_available", doc_days.getText().toString());
         outgoing_bundle.putString("hours", doc_hours.getText().toString());
 
-        outgoing_bundle.putString("user_name", name[0]);
+        outgoing_bundle.putString("USERNAME", bundle.getString("USERNAME"));
+        outgoing_bundle.putString("SERVER_URL", serverUrl);
 
         intent.putExtras(outgoing_bundle);
         startActivity(intent);

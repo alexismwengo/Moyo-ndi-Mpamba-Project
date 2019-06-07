@@ -22,8 +22,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:orientation="horizontal">
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/app_id"
@@ -35,12 +34,14 @@
                     android:textColor="#333"/>
 
                 <TextView
-                    android:id="@+id/app_state"
+                    android:id="@+id/app_stateee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/app_id"
+                    android:layout_centerInParent="true"
+                    android:text=""
                     android:layout_marginLeft="10dp"
-                    android:textColor="#333"/>
+                    android:textColor="#333"
+                    android:fontFamily="sans-serif-medium"/>
 
             </RelativeLayout>
 
@@ -61,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:text="Booking title"
                         android:layout_alignParentLeft="true"
-                        android:drawableLeft="@drawable/ic_local_offer"
+                        android:drawableLeft="@drawable/ic_title"
                         android:drawablePadding="3dp"
                         app:fontFamily="sans-serif-light"
                         android:padding="3dp"/>
@@ -123,6 +124,15 @@
                         android:fontFamily="sans-serif-light"
                         android:padding="3dp"/>
                     <TextView
+                        android:id="@+id/booked_doc_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Doc Phone"
+                        android:drawableLeft="@drawable/ic_phone2"
+                        android:drawablePadding="3dp"
+                        android:layout_centerInParent="true"
+                        android:padding="3dp"/>
+                    <TextView
                         android:id="@+id/booked_doc_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -150,7 +160,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Patient Details"
+                    android:text="Appointment Status"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium"
                     android:padding="6dp"/>
@@ -161,40 +171,31 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/age"
+                        android:id="@+id/app_state0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Patient age"
+                        android:text="State:"
                         android:fontFamily="sans-serif-light"
                         android:layout_alignParentLeft="true"
                         android:padding="3dp"/>
                     <TextView
-                        android:id="@+id/patientphone"
+                        android:id="@+id/app_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Patient phone"
+                        android:text="Appointment State"
                         android:fontFamily="sans-serif-light"
-                        android:layout_centerInParent="true"
-                        android:layout_marginLeft="7dp"
-                        android:drawablePadding="3dp"
-                        android:drawableLeft="@drawable/ic_phone2"
+                        android:layout_toRightOf="@id/app_state0"
                         android:padding="3dp"/>
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/app_report"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true">
-
-                        <TextView
-                            android:id="@+id/patientaddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text="Patient Address"
-                            android:drawableLeft="@drawable/ic_location2"
-                            android:drawablePadding="3dp"
-                            android:fontFamily="sans-serif-light"
-                            android:padding="3dp"/>
-                    </LinearLayout>
+                        android:layout_alignParentRight="true"
+                        android:text="Done"
+                        android:drawablePadding="3dp"
+                        android:drawableLeft="@drawable/ic_local_offer"
+                        android:fontFamily="sans-serif-light"
+                        android:padding="3dp"/>
 
 
                 </RelativeLayout>

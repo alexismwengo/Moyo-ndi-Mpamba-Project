@@ -3,17 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/refresh_tips"
-        android:title="Refresh"
-        android:icon="@drawable/ic_refresh"
-        app:showAsAction="ifRoom">
-
-    </item>
-    <item
-        android:id="@+id/share_tip"
-        android:icon="@drawable/ic_share"
-        android:title="Share"
-        app:showAsAction="ifRoom">
+        android:id="@+id/health_tips-terms"
+        android:title="Terms Of Use"
+        app:showAsAction="never">
 
     </item>
 

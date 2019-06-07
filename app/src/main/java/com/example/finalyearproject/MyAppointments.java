@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +40,12 @@ import java.util.Map;
 
 public class MyAppointments extends AppCompatActivity {
     private Toolbar toolbar;
+    private  Bundle bundle;
     private ListView listView;
     private String[] name;
-    private String theName, app_id;
-    private String [] user_name, user_age, date, appointment_id, user_address, user_message, appointment_state, appointment_time, doctor_firstname, user_phone, doctor_lastname, doc_city;
-    private TextView patientName, appointments_total, appointments_confirmed, docName, address, book_title, book_date, pat_age, pat_phone, pat_address, idd;
+    private String theName, serverUrl, app_id;
+    private String [] user_name, user_age, date, appointment_id, user_address, user_message, appointment_state, appointment_time, doctor_firstname, doc_phone, doctor_lastname, doc_city;
+    private TextView patientName, appointments_total, appointments_confirmed, docName, address, book_title, book_date, doc_Phone, app_report, idd;
     private TextView deleteApp;
 
     @Override
@@ -59,20 +61,24 @@ public class MyAppointments extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.list_appointment);
 
-        Bundle bu = getIntent().getExtras();
-        theName = bu.getString("name");
+        bundle = getIntent().getExtras();
+        serverUrl = bundle.getString("SERVER_URL");
+        theName = bundle.getString("USERNAME");
 
         patientName = (TextView) findViewById(R.id.patient_name);
+        patientName.setText(theName);
 
-        StringRequest stringRequest3 = new StringRequest(Request.Method.POST, "http://41.70.35.58/AccessUserAppointments.php",
+        appointments_total = (TextView) findViewById(R.id.all_appointments);
+        appointments_confirmed = (TextView) findViewById(R.id.confirmed);
+
+        StringRequest stringRequest3 = new StringRequest(Request.Method.POST, serverUrl+"AccessUserAppointments.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
                         if(response.equals("No Appointments for such user")){
-                            patientName.setText(theName);
                             String name = "No Appointments for "+theName.toUpperCase();
-                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), name, Toast.LENGTH_LONG).show();
                         }
                         else{
                             try {
@@ -80,8 +86,8 @@ public class MyAppointments extends AppCompatActivity {
 
                                 JSONObject jsonObject = null;
 
-                                //appointment_time = new String[jsonArray.length()];
-                                //appointment_state =  new String[jsonArray.length()];
+                                appointment_time = new String[jsonArray.length()];
+                                appointment_state =  new String[jsonArray.length()];
 
                                 user_name = new String[jsonArray.length()];
                                 user_age =  new String[jsonArray.length()];
@@ -90,7 +96,7 @@ public class MyAppointments extends AppCompatActivity {
                                 user_address =  new String[jsonArray.length()];
                                 user_message =  new String[jsonArray.length()];
                                 doctor_firstname =  new String[jsonArray.length()];
-                                user_phone =  new String[jsonArray.length()];
+                                doc_phone =  new String[jsonArray.length()];
                                 doctor_lastname =  new String[jsonArray.length()];
                                 doc_city =  new String[jsonArray.length()];
 
@@ -104,11 +110,11 @@ public class MyAppointments extends AppCompatActivity {
                                     user_address[i] = jsonObject.getString("user_address");
                                     user_message[i] = jsonObject.getString("user_message");
 
-                                    //appointment_time[i] = jsonObject.getString("appointment_time");
-                                    // appointment_state[i] =  jsonObject.getString("appointment_state");
+                                    appointment_time[i] = jsonObject.getString("appointment_time");
+                                    appointment_state[i] =  jsonObject.getString("appointment_state");
 
                                     doctor_firstname[i] = jsonObject.getString("doctor_firstname");
-                                    user_phone[i] = jsonObject.getString("user_phone");
+                                    doc_phone[i] = jsonObject.getString("doc_phone");
                                     doctor_lastname[i] = jsonObject.getString("doctor_lastname");
                                     doc_city[i] = jsonObject.getString("doc_city");
 
@@ -122,6 +128,8 @@ public class MyAppointments extends AppCompatActivity {
 
                             CustomAdapter customAdapter = new CustomAdapter();
                             listView.setAdapter(customAdapter);
+
+                            appointments_total.setText("All Appointments ("+user_name.length+")");
 
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
@@ -138,10 +146,10 @@ public class MyAppointments extends AppCompatActivity {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(MyAppointments.this);
                                             builder.setTitle("Confirm Delete");
                                             builder.setMessage("Appointment id no. "+i_d+" will be deleted from the system.");
-                                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    StringRequest stringRequest4 = new StringRequest(Request.Method.POST, "http://41.70.35.58/DeleteAppointment.php",
+                                                    StringRequest stringRequest4 = new StringRequest(Request.Method.POST, serverUrl+"DeleteAppointment.php",
                                                             new Response.Listener<String>() {
                                                                 @Override
                                                                 public void onResponse(final String response) {
@@ -239,30 +247,63 @@ public class MyAppointments extends AppCompatActivity {
 
             view = getLayoutInflater().inflate(R.layout.list_layout, null, true);
 
-            patientName = (TextView) findViewById(R.id.patient_name);
-            appointments_total = (TextView) findViewById(R.id.all_appointments);
-            appointments_confirmed = (TextView) findViewById(R.id.confirmed);
+
             docName = (TextView) view.findViewById(R.id.booked_doc);
             address = (TextView) view.findViewById(R.id.booked_doc_address);
             book_title = (TextView) view.findViewById(R.id.booking_title);
             book_date = (TextView) view.findViewById(R.id.booking_date);
-            pat_age = (TextView) view.findViewById(R.id.age);
-            pat_phone = (TextView) view.findViewById(R.id.patientphone);
-            pat_address = (TextView) view.findViewById(R.id.patientaddress);
+            //pat_age = (TextView) view.findViewById(R.id.age);
+            doc_Phone = (TextView) view.findViewById(R.id.booked_doc_phone);
+            app_report = (TextView) view.findViewById(R.id.app_report);
             idd = (TextView) view.findViewById(R.id.app_id);
 
-            //TextView appointments_time = (TextView) findViewById(R.id.booked_time);
-            //TextView app_state = (TextView) findViewById(R.id.app_state);
-            //app_state.setText(appointment_state[position]);
-            //appointments_time.setText(appointment_time[position]);
+            TextView appointments_time = (TextView) view.findViewById(R.id.booked_time);
+            appointments_time.setText(appointment_time[position]);
 
-            patientName.setText(theName);
-            appointments_total.setText("All Appointments ("+this.getCount()+")");
+            book_date.setText(date[position]);
 
-            docName.setText("Dr. "+doctor_firstname[position] + " " + doctor_lastname[position]);
+            String datePassed = "";
+            Date bookedDate = null;
+            try {
+                bookedDate = new SimpleDateFormat("yyyy-MM-dd").parse(date[position]);
+            }catch (ParseException e){
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            if(new Date().after(bookedDate)){
+                datePassed = "Passed";
+            }
+            else if (bookedDate.after(new Date())){
+                datePassed = "Not Passed";
+            }
+
+            TextView app_state = (TextView) view.findViewById(R.id.app_state);
+
+            String statee = appointment_state[position];
+            if(statee.equals("0") && datePassed.equals("Not Passed")){
+                statee = "[Awaiting Doc. Confirmation]";
+            }
+            else if(statee.equals("1") && datePassed.equals("Not Passed")){
+                statee = "[Confirmed]";
+            }
+            else if(statee.equals("1") && datePassed.equals("Passed")){
+                statee = "[Concluded]";
+            }
+            else if(statee.equals("0") && datePassed.equals("Passed")){
+                statee = "[Never Confirmed]";
+            }
+            app_state.setText(statee);
+
+            String full_docname = "Dr. "+doctor_firstname[position] + " " + doctor_lastname[position];
+            if(full_docname.length() > 15){
+                full_docname = full_docname.substring(0, 15);
+                book_title.setText(full_docname+"...");
+            }else {
+                book_title.setText(user_message[position]);
+            }
+            docName.setText(full_docname);
 
             app_id = appointment_id[position];
-
             idd.setText("Appointment Id:\t"+ appointment_id[position]);
 
             String title = user_message[position];
@@ -273,11 +314,21 @@ public class MyAppointments extends AppCompatActivity {
                 book_title.setText(user_message[position]);
             }
 
-            book_date.setText(date[position]);
             address.setText(doc_city[position]);
-            pat_age.setText("Age: "+user_age[position]);
-            pat_phone.setText(user_phone[position]);
-            pat_address.setText(user_address[position]);
+            doc_Phone.setText(doc_phone[position]);
+
+            if(statee.equals("[Awaiting Doc. Confirmation]")){
+                app_report.setText("---");
+            }
+            else if(statee.equals("[Confirmed]")){
+                app_report.setText("Appointment On");
+            }
+            else if(statee.equals("[Concluded]")){
+                app_report.setText("Done (Success)");
+            }
+            else if(statee.equals("[Never Confirmed]")){
+                app_report.setText("Done (---)");
+            }
 
             return view;
         }

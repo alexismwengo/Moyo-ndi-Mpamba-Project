@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/emergency_timee"
+        android:title="Time"
+        android:icon="@drawable/ic_access_time2"/>
+    <item
+        android:id="@+id/emergency_placee"
+        android:title="Place"
+        android:icon="@drawable/ic_my_location"/>
+</menu>

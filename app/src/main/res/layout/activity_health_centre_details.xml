@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DoctorDetails"
+    android:background="@color/greylight"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="301dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:background="@drawable/gradientbackground"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="15dp"
+                        android:src="@drawable/hosp" />
+
+                    <TextView
+                        android:id="@+id/hospital_name_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="Hospital Name Here"
+                        android:textColor="#fff"
+                        android:textSize="21sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"/>
+
+                </LinearLayout>
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="85dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="215dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+                        <LinearLayout
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Days"
+                                android:textSize="20sp"/>
+                            <TextView
+                                android:id="@+id/days_open_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mon - Fri"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/startblue"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Hours"
+                                android:textSize="20sp"/>
+                            <TextView
+                                android:id="@+id/hours_open_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="6 am - 4 pm"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/startblue"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/hosp_info_layout"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Posts"
+                                android:textSize="20sp"/>
+                            <TextView
+                                android:id="@+id/posts_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:paddingTop="10dp"
+                                android:textColor="@color/startblue"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:clickable="true"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:srcCompat="@drawable/ic_email" />
+                    <TextView
+                        android:id="@+id/hosp_email_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="true"
+                        android:text="hospital@somemail.com"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:clickable="true"
+                    android:layout_marginTop="15dp"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:srcCompat="@drawable/ic_phone" />
+                    <TextView
+                        android:id="@+id/hosp_phone_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:paddingLeft="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="+265 9947465473"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="15dp"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:srcCompat="@drawable/ic_school" />
+                    <TextView
+                        android:id="@+id/doc_specialty1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:paddingLeft="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Specialty"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/location_container"
+                    android:layout_marginTop="15dp"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true">
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:srcCompat="@drawable/ic_location" />
+
+                    <TextView
+                        android:id="@+id/hosp_city_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="25dp"
+                        android:clickable="true"
+                        android:text="City" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/book_appointment_button"
+                    android:background="@drawable/buttonstylegradient"
+                    android:textColor="#fff"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Book Appointment"
+                    android:layout_gravity="center_horizontal"
+                    android:textAllCaps="false"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

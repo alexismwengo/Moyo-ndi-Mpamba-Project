@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_tips_array">
+        <item>All Tips</item>
+        <item>Food &amp; Diets</item>
+        <item>Fitness</item>
+    </string-array>
+</resources>

@@ -35,7 +35,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="3dp"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/ic_person" />
+                    app:srcCompat="@drawable/ic_business" />
             </RelativeLayout>
 
         </RelativeLayout>
@@ -56,7 +56,7 @@
                 android:padding="3dp">
 
                 <TextView
-                    android:id="@+id/profile_name"
+                    android:id="@+id/hospital_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
@@ -64,7 +64,7 @@
                     android:textColor="#333"
                     app:fontFamily="sans-serif-medium" />
                 <TextView
-                    android:id="@+id/proffession"
+                    android:id="@+id/hospital_days_open"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
@@ -75,7 +75,7 @@
                     app:fontFamily="sans-serif-smallcaps"/>
 
                 <TextView
-                    android:id="@+id/city"
+                    android:id="@+id/hospital_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"

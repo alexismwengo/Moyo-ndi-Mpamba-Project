@@ -160,9 +160,6 @@ public class PrivateDoctors extends AppCompatActivity {
                                 hours[i] = jsonObject.getString("hours");
 
                             }
-                            //Toast.makeText(getApplicationContext(), firstname[0], Toast.LENGTH_SHORT).show();
-                            firstnameArray = new ArrayList<String>(Arrays.asList(firstname));
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -265,42 +262,6 @@ public class PrivateDoctors extends AppCompatActivity {
             profession.setText("Specialty:\t"+proffession[position]);
             ciTy.setText("City:\t"+ city[position]);
 
-
-            return view;
-        }
-    }
-
-    class CustomAdapter2 extends BaseAdapter{
-
-        @Override
-        public int getCount() {
-            return firstname.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-
-            view = getLayoutInflater().inflate(R.layout.layout, null, true);
-
-            ImageView imageView = (ImageView) view.findViewById(R.id.image);
-
-            TextView docName = (TextView) view.findViewById(R.id.profile_name);
-            TextView profession = (TextView) view.findViewById(R.id.proffession);
-            TextView ciTy = (TextView) view.findViewById(R.id.city);
-
-            docName.setText("Dr. "+lstFound.get(position) + " " + lastnameArray.get(position));
-            profession.setText("Specialty:\t"+proffessionArray.get(position));
-            ciTy.setText("City:\t"+ cityArray.get(position));
 
             return view;
         }

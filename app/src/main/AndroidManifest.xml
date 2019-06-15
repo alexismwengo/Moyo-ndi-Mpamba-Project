@@ -20,17 +20,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".HealthCentreDetails"></activity>
         <activity
             android:name=".MyAppointments"
-            android:label="Appointments"></activity>
-
+            android:label="Appointments" />
         <activity
             android:name=".HealthTips"
             android:label="@string/health_tips"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".LocalHospitals" />
+            android:name=".LocalHospitals"
+            android:label="Health Centres"/>
         <activity
             android:name=".Emergency"
             android:label="@string/report_emergency" />
@@ -43,8 +43,6 @@
             android:label="@string/doc_list" />
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
             android:label="@string/log_in" />
         <activity
             android:name=".Home"
@@ -65,17 +63,16 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-        
+
         <provider
-            android:authorities="com.example.finalyearproject"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.finalyearproject"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
-        
     </application>
 
 </manifest>

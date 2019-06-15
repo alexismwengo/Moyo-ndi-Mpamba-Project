@@ -72,7 +72,13 @@ public class Home extends AppCompatActivity {
         localHospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, LocalHospitals.class));
+                Intent intent = new Intent(Home.this, LocalHospitals.class);
+                Bundle b = new Bundle();
+
+                b.putString("USERNAME", bundle.getString("USERNAME"));
+                b.putString("SERVER_URL", serverUrl);
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
 
@@ -113,7 +119,13 @@ public class Home extends AppCompatActivity {
         healthTips.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, HealthTips.class));
+                Intent intent = new Intent(Home.this, HealthTips.class);
+                Bundle b = new Bundle();
+
+                b.putString("SERVER_URL", serverUrl);
+                intent.putExtras(b);
+
+                startActivity(intent);
             }
         });
 
@@ -146,6 +158,8 @@ public class Home extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                TextView username = findViewById(R.id.user_name);
+                username.setText(bundle.getString("USERNAME"));
                 switch (menuItem.getItemId()){
                     case R.id.home:
                         menuItem.setChecked(true);

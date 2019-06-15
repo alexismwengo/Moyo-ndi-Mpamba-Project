@@ -15,25 +15,13 @@
         android:text="Moyo ndi Mpamba"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:gravity="center"
         app:fontFamily="casual"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.426" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome"
-        app:fontFamily="casual"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/lab1"
-        app:layout_constraintVertical_bias="0.186" />
+        app:layout_constraintVertical_bias="0.49" />
 
 </android.support.constraint.ConstraintLayout>

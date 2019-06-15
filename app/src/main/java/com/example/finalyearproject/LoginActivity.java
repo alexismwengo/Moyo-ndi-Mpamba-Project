@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
 
-        ServerUrl = "http://41.70.47.134/";
+        ServerUrl = "http://41.70.44.250/";
 
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);

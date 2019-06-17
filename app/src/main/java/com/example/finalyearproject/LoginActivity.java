@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
 
-        ServerUrl = "http://41.70.44.250/";
+        ServerUrl = "http://41.70.47.226/";
 
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
@@ -100,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
 
                                         bundle.putString("USERNAME", name[0]);
+                                        bundle.putString("USEREMAIL", email.getText().toString());
                                         intent.putExtras(bundle);
                                         startActivity(intent);
 
@@ -116,8 +117,8 @@ public class LoginActivity extends AppCompatActivity {
                             error.printStackTrace();
 
                             //following lines will be removed
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                            //intent.putExtras(bundle);
+                            //startActivity(intent);
                         }
                     }){
                         @Override

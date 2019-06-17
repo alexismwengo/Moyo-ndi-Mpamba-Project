@@ -2,6 +2,7 @@ package com.example.finalyearproject;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,10 +43,9 @@ public class MyAppointments extends AppCompatActivity {
     private Toolbar toolbar;
     private  Bundle bundle;
     private ListView listView;
-    private String[] name;
     private String theName, serverUrl, app_id;
-    private String [] user_name, user_age, date, appointment_id, user_address, user_message, appointment_state, appointment_time, doctor_firstname, doc_phone, doctor_lastname, doc_city;
-    private TextView patientName, appointments_total, appointments_confirmed, docName, address, book_title, book_date, doc_Phone, app_report, idd;
+    private String [] user_name, user_age, date, appointment_id, user_address, user_message, appointment_state, appointment_time, name, phone, city, sent_to;
+    private TextView patientName, appointments_total, appointments_confirmed, name_label, address, book_title, book_date, phone_label, app_report, idd;
     private TextView deleteApp;
 
     @Override
@@ -95,10 +95,10 @@ public class MyAppointments extends AppCompatActivity {
                                 appointment_id =new String[jsonArray.length()];
                                 user_address =  new String[jsonArray.length()];
                                 user_message =  new String[jsonArray.length()];
-                                doctor_firstname =  new String[jsonArray.length()];
-                                doc_phone =  new String[jsonArray.length()];
-                                doctor_lastname =  new String[jsonArray.length()];
-                                doc_city =  new String[jsonArray.length()];
+                                name =  new String[jsonArray.length()];
+                                phone =  new String[jsonArray.length()];
+                                city =  new String[jsonArray.length()];
+                                sent_to =  new String[jsonArray.length()];
 
                                 for(int i=0; i<jsonArray.length(); i++){
                                     jsonObject = jsonArray.getJSONObject(i);
@@ -113,13 +113,12 @@ public class MyAppointments extends AppCompatActivity {
                                     appointment_time[i] = jsonObject.getString("appointment_time");
                                     appointment_state[i] =  jsonObject.getString("appointment_state");
 
-                                    doctor_firstname[i] = jsonObject.getString("doctor_firstname");
-                                    doc_phone[i] = jsonObject.getString("doc_phone");
-                                    doctor_lastname[i] = jsonObject.getString("doctor_lastname");
-                                    doc_city[i] = jsonObject.getString("doc_city");
+                                    name[i] = jsonObject.getString("name");
+                                    phone[i] = jsonObject.getString("phone");
+                                    sent_to[i] = jsonObject.getString("sent_to");
+                                    city[i] = jsonObject.getString("city");
 
                                 }
-                                //Toast.makeText(getApplicationContext(), doctor_firstname[1], Toast.LENGTH_SHORT).show();
 
                             } catch (JSONException e) {
                                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -160,7 +159,7 @@ public class MyAppointments extends AppCompatActivity {
                                                                     builder1.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                                                         @Override
                                                                         public void onClick(DialogInterface dialog, int which) {
-                                                                            Toast.makeText(getApplicationContext(),"Delete Successfull", Toast.LENGTH_SHORT).show();
+                                                                            //Toast.makeText(getApplicationContext(),"Delete Successfull", Toast.LENGTH_SHORT).show();
                                                                         }
                                                                     });
                                                                     AlertDialog alertDialog1 = builder1.create();
@@ -247,15 +246,21 @@ public class MyAppointments extends AppCompatActivity {
 
             view = getLayoutInflater().inflate(R.layout.list_layout, null, true);
 
-
-            docName = (TextView) view.findViewById(R.id.booked_doc);
+            name_label = (TextView) view.findViewById(R.id.booked_doc);
             address = (TextView) view.findViewById(R.id.booked_doc_address);
             book_title = (TextView) view.findViewById(R.id.booking_title);
             book_date = (TextView) view.findViewById(R.id.booking_date);
-            //pat_age = (TextView) view.findViewById(R.id.age);
-            doc_Phone = (TextView) view.findViewById(R.id.booked_doc_phone);
+            phone_label = (TextView) view.findViewById(R.id.booked_doc_phone);
             app_report = (TextView) view.findViewById(R.id.app_report);
             idd = (TextView) view.findViewById(R.id.app_id);
+
+            TextView details_label = (TextView) view.findViewById(R.id.details_label);
+            if(sent_to[position].equals("Health Facility")){
+                details_label.setText("Hospital Details");
+
+                Drawable img = getApplicationContext().getResources().getDrawable( R.drawable.ic_business);
+                name_label.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null);
+            }
 
             TextView appointments_time = (TextView) view.findViewById(R.id.booked_time);
             appointments_time.setText(appointment_time[position]);
@@ -292,30 +297,32 @@ public class MyAppointments extends AppCompatActivity {
             else if(statee.equals("0") && datePassed.equals("Passed")){
                 statee = "[Never Confirmed]";
             }
+            else if(statee.equals("3")){
+                statee = "[Rejected]";
+            }
             app_state.setText(statee);
 
-            String full_docname = "Dr. "+doctor_firstname[position] + " " + doctor_lastname[position];
-            if(full_docname.length() > 15){
-                full_docname = full_docname.substring(0, 15);
-                book_title.setText(full_docname+"...");
+            String full_name = name[position];
+            if(full_name.length() > 15){
+                full_name = full_name.substring(0, 15);
+                name_label.setText(full_name+"...");
             }else {
-                book_title.setText(user_message[position]);
+                name_label.setText(name[position]);
             }
-            docName.setText(full_docname);
 
             app_id = appointment_id[position];
             idd.setText("Appointment Id:\t"+ appointment_id[position]);
 
             String title = user_message[position];
-            if(title.length() > 12){
-                title = title.substring(0, 12);
+            if(title.length() > 15){
+                title = title.substring(0, 15);
                 book_title.setText(title+"...");
             }else {
                 book_title.setText(user_message[position]);
             }
 
-            address.setText(doc_city[position]);
-            doc_Phone.setText(doc_phone[position]);
+            address.setText(city[position]);
+            phone_label.setText(phone[position]);
 
             if(statee.equals("[Awaiting Doc. Confirmation]")){
                 app_report.setText("---");
@@ -327,7 +334,10 @@ public class MyAppointments extends AppCompatActivity {
                 app_report.setText("Done (Success)");
             }
             else if(statee.equals("[Never Confirmed]")){
-                app_report.setText("Done (---)");
+                app_report.setText("Date Passed (---)");
+            }
+            else if(statee.equals("[Rejected]")){
+                app_report.setText("Appo. was Rejected)");
             }
 
             return view;

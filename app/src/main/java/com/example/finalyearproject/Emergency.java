@@ -49,9 +49,11 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,7 +85,7 @@ public class Emergency extends AppCompatActivity {
     private String activity_from, pathToFile, genderOfPatient = "", health_centre_selected = "", ambulance_operator_id = "", image_submitted = "";
     private Location gps_loc = null, network_loc = null, final_loc = null;
     private Double latitude = 0.0, longitude = 0.0;
-    private String [] name;
+    private String [] name, hospital_name;
     String user_name;
     String serverUrl, address = "", city = "", state = "", country = "", postal_code = "", known_name = "", premises = "";
 
@@ -235,6 +237,31 @@ public class Emergency extends AppCompatActivity {
         });
 
         patient_gender = (Spinner) findViewById(R.id.patient_gender);
+
+        /*RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, serverUrl+"accessHealthCentres.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject jsonObject = null;
+                            hospital_name = new String[jsonArray.length()];
+                            for(int i=0; i<jsonArray.length(); i++){
+                                jsonObject = jsonArray.getJSONObject(i);
+                                hospital_name[i] = jsonObject.getString("hospital_name");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }); queue.add(stringRequest);*/
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.patient_gender_array,
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -458,12 +485,15 @@ public class Emergency extends AppCompatActivity {
                 protected Map<String, String> getParams() throws AuthFailureError {
 
                     SimpleDateFormat f=new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat time = new SimpleDateFormat("hh:mm:ss a");
                     String thDate=new String(f.format(new Date()));
+                    String timee=new String(time.format(new Date()));
 
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("genderofpatient", genderOfPatient);
                     params.put("health_centre", health_centre_selected);
                     params.put("date_submitted", thDate);
+                    params.put("time_submitted", timee);
                     params.put("ambulance_operator_id", ambulance_operator_id);
                     params.put("image_submitted", image_submitted);
                     params.put("emergency_sender", emergencySender.getText().toString());

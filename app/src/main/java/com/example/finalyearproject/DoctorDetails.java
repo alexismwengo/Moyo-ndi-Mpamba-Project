@@ -36,9 +36,7 @@ import java.util.Map;
 public class DoctorDetails extends AppCompatActivity {
 
     Button bookAppointments;
-    TextView doc_name, doc_email, doc_phone, doc_specialty, doc_city, doc_days, doc_hours;
-    //LinearLayout email_container, phone_container, location_container;
-    LinearLayout posts;
+    TextView doc_name, doc_email, doc_phone, doc_specialty, doc_city, doc_days, doc_hours, doc_info_label;
     Bundle bundle;
     private String serverUrl;
     String[] name;
@@ -64,6 +62,7 @@ public class DoctorDetails extends AppCompatActivity {
         doc_city = (TextView) findViewById(R.id.doc_city);
         doc_days = (TextView) findViewById(R.id.doc_days);
         doc_hours = (TextView) findViewById(R.id.doc_hours);
+        doc_info_label = (TextView) findViewById(R.id.doc_info_label);
 
         bundle = getIntent().getExtras();
         serverUrl = bundle.getString("SERVER_URL");
@@ -99,14 +98,7 @@ public class DoctorDetails extends AppCompatActivity {
         doc_city.setText(bundle.getString("city"));
         doc_days.setText(bundle.getString("days_available"));
         doc_hours.setText(bundle.getString("hours"));
-
-        posts= (LinearLayout) findViewById(R.id.posts);
-        posts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), bundle.getString("doc_info"), Toast.LENGTH_LONG).show();
-            }
-        });
+        doc_info_label.setText(bundle.getString("doc_info"));
 
     }
 
@@ -116,6 +108,7 @@ public class DoctorDetails extends AppCompatActivity {
         Bundle outgoing_bundle = getIntent().getExtras();
 
         outgoing_bundle.putString("username", doc_name.getText().toString());
+        outgoing_bundle.putString("activity", "Doctors");
         outgoing_bundle.putString("proffession", doc_specialty.getText().toString());
         outgoing_bundle.putString("city", doc_city.getText().toString());
         outgoing_bundle.putString("phone", doc_phone.getText().toString());

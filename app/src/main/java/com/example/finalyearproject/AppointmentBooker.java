@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -42,13 +44,15 @@ import java.util.Map;
 public class AppointmentBooker extends AppCompatActivity {
     private Toolbar toolbar;
     Bundle bundle;
-    private String serverUrl, dateString, firstname, lastname, city, phone, proffession, days_available, hours, appointment_time;
-    private TextView doc_name, doc_location, doc_profession, show_date;
+    private String dateString, firstname, lastname, city, phone, proffession, days_available, hours, appointment_time;
+    private TextView name, location, profession, show_date;
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private Button bookingButton;
+    private ImageView doc_hospital_image;
     private RadioGroup radioGroup, radioGroup2;
     private EditText patient_name, patient_age, patient_phone, patient_address, additional_comments;
     private Calendar myCalendar;
+    private String serverUrl, activityFrom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,7 @@ public class AppointmentBooker extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         serverUrl = bundle.getString("SERVER_URL");
+        activityFrom = bundle.getString("activity");
 
         firstname = bundle.getString("firstname");
         lastname = bundle.getString("lastname");
@@ -70,40 +75,27 @@ public class AppointmentBooker extends AppCompatActivity {
         proffession = bundle.getString("proffession");
         days_available = bundle.getString("days_available");
         hours = bundle.getString("hours");
+        doc_hospital_image = (ImageView) findViewById(R.id.doc_image);
 
-        doc_name = (TextView)findViewById(R.id.doc_name);
-        doc_name.setText("Dr. "+firstname+" "+lastname);
+        name = (TextView)findViewById(R.id.doc_name);
+        profession = (TextView)findViewById(R.id.doc_profession);
+        location = (TextView)findViewById(R.id.doc_location);
 
-        doc_profession = (TextView)findViewById(R.id.doc_profession);
-        doc_profession.setText(proffession);
+        if(activityFrom.equals("Doctors")){
+            name.setText("Dr. "+firstname+" "+lastname);
+            profession.setText(proffession);
+        }
+        else if(activityFrom.equals("HealthCentre")){
+            name.setText(bundle.getString("hospital_name"));
+            doc_hospital_image.setImageResource(R.drawable.image_hosp);
 
-        doc_location = (TextView)findViewById(R.id.doc_location);
-        doc_location.setText(city);
+            profession.setText(days_available);
+            Drawable img = getApplicationContext().getResources().getDrawable( R.drawable.ic_date2);
+            profession.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null);
+        }
+        location.setText(city);
 
         show_date = (TextView) findViewById(R.id.show_date);
-        /*show_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DATE);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getApplicationContext(),
-                        dateSetListener, year, month, day);
-                datePickerDialog.show();
-            }
-        });
-
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month+1;
-                String date = dayOfMonth+" / "+month+" / "+year;
-                show_date.setText(date);
-            }
-        };*/
 
         myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -139,7 +131,7 @@ public class AppointmentBooker extends AppCompatActivity {
                 RadioButton rdbtn = (RadioButton)findViewById(selectedId);
                 appointment_time = rdbtn.getText().toString()+" am";
 
-                Toast.makeText(getApplicationContext(), appointment_time, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), appointment_time, Toast.LENGTH_SHORT).show();
             }
         });
         radioGroup2 = (RadioGroup) findViewById(R.id.radio_button2);
@@ -228,11 +220,17 @@ public class AppointmentBooker extends AppCompatActivity {
                         params.put("patient_message", additional_comments.getText().toString().trim());
                         params.put("date", dateString);
                         params.put("appointment_time", appointment_time);
-                        params.put("doc_city", city);
-                        params.put("doc_phone", phone);
-                        params.put("doctor_firstname", firstname);
-                        params.put("doctor_lastname", lastname);
+                        params.put("city", city);
+                        params.put("phone", phone);
 
+                        if(activityFrom.equals("Doctors")){
+                            params.put("sent_to", "Private Doctor");
+                            params.put("name", firstname+" "+lastname);
+                        }
+                        else if(activityFrom.equals("HealthCentre")){
+                            params.put("sent_to", "Health Facility");
+                            params.put("name", bundle.getString("hospital_name"));
+                        }
                         return params;
                     }
                 };

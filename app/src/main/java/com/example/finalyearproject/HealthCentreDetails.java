@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class HealthCentreDetails extends AppCompatActivity {
 
     Button bookAppointments;
-    TextView nameLabel, emailLabel, phoneLabel, doc_specialty, cityLabel, daysLabel, hoursLabel;
+    TextView nameLabel, emailLabel, phoneLabel, cityLabel, daysLabel, hoursLabel, infoLabel;
     LinearLayout posts;
     Bundle bundle;
     private String serverUrl;
@@ -36,13 +36,13 @@ public class HealthCentreDetails extends AppCompatActivity {
         nameLabel = (TextView) findViewById(R.id.hospital_name_label);
         emailLabel = (TextView) findViewById(R.id.hosp_email_label);
         phoneLabel = (TextView) findViewById(R.id.hosp_phone_label);
-        doc_specialty = (TextView) findViewById(R.id.doc_specialty1);
         cityLabel = (TextView) findViewById(R.id.hosp_city_label);
         daysLabel = (TextView) findViewById(R.id.days_open_label);
         hoursLabel = (TextView) findViewById(R.id.hours_open_label);
+        infoLabel = (TextView) findViewById(R.id.hosp_info_label);
 
         bundle = getIntent().getExtras();
-        //serverUrl = bundle.getString("SERVER_URL");
+        serverUrl = bundle.getString("SERVER_URL");
 
         nameLabel.setText(bundle.getString("hospitalname"));
         emailLabel.setText(bundle.getString("hosp_email"));
@@ -74,15 +74,17 @@ public class HealthCentreDetails extends AppCompatActivity {
         //doc_specialty.setText(bundle.getString("proffession"));
         cityLabel.setText(bundle.getString("city"));
         daysLabel.setText(bundle.getString("days_open"));
-        daysLabel.setText(bundle.getString("hours"));
+        hoursLabel.setText(bundle.getString("hours"));
 
         posts= (LinearLayout) findViewById(R.id.hosp_info_layout);
         posts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), bundle.getString("quick_info"), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), bundle.getString("quick_info"), Toast.LENGTH_LONG).show();
             }
         });
+
+        infoLabel.setText( bundle.getString("quick_info"));
 
     }
 
@@ -91,16 +93,14 @@ public class HealthCentreDetails extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), AppointmentBooker.class);
         Bundle outgoing_bundle = getIntent().getExtras();
 
-        outgoing_bundle.putString("username", nameLabel.getText().toString());
-        outgoing_bundle.putString("proffession", doc_specialty.getText().toString());
+        outgoing_bundle.putString("hospital_name", nameLabel.getText().toString());
+        outgoing_bundle.putString("activity", "HealthCentre");
         outgoing_bundle.putString("city", cityLabel.getText().toString());
-        outgoing_bundle.putString("phone", phoneLabel.getText().toString());
-        outgoing_bundle.putString("email", emailLabel.getText().toString());
         outgoing_bundle.putString("days_available", daysLabel.getText().toString());
         outgoing_bundle.putString("hours", hoursLabel.getText().toString());
 
-        //outgoing_bundle.putString("USERNAME", bundle.getString("USERNAME"));
-        //outgoing_bundle.putString("SERVER_URL", serverUrl);
+        outgoing_bundle.putString("USERNAME", bundle.getString("USERNAME"));
+        outgoing_bundle.putString("SERVER_URL", serverUrl);
 
         intent.putExtras(outgoing_bundle);
         startActivity(intent);

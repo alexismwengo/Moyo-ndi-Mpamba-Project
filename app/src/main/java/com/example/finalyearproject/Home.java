@@ -123,6 +123,7 @@ public class Home extends AppCompatActivity {
                 Bundle b = new Bundle();
 
                 b.putString("SERVER_URL", serverUrl);
+                b.putString("USERNAME", bundle.getString("USERNAME"));
                 intent.putExtras(b);
 
                 startActivity(intent);
@@ -155,6 +156,13 @@ public class Home extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
+        navUsername.setText(bundle.getString("USERNAME"));
+        TextView navUserEmail = (TextView) headerView.findViewById(R.id.user_email);
+        navUserEmail.setText(bundle.getString("USEREMAIL"));
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

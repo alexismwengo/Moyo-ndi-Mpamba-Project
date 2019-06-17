@@ -28,14 +28,13 @@
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="4dp"
                 android:gravity="center">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/circlebackgroundgreen"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="3dp"
+                    android:layout_centerVertical="true"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/ic_business" />
+                    app:srcCompat="@drawable/ic_business1" />
             </RelativeLayout>
 
         </RelativeLayout>

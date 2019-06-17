@@ -101,20 +101,20 @@ public class LocalHospitals extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(getApplicationContext(), HealthCentreDetails.class);
-                                Bundle bundle = new Bundle();
+                                Bundle bundle1 = new Bundle();
 
-                                bundle.putString("hospitalname", hospital_name[position]);
-                                bundle.putString("city", city[position]);
-                                bundle.putString("phone", phone[position]);
-                                bundle.putString("hosp_email", email[position]);
-                                bundle.putString("quick_info", quick_description[position]);
-                                bundle.putString("days_open", days_open[position]);
-                                bundle.putString("hours", hours_open[position]);
+                                bundle1.putString("hospitalname", hospital_name[position]);
+                                bundle1.putString("city", city[position]);
+                                bundle1.putString("phone", phone[position]);
+                                bundle1.putString("hosp_email", email[position]);
+                                bundle1.putString("quick_info", quick_description[position]);
+                                bundle1.putString("days_open", days_open[position]);
+                                bundle1.putString("hours", hours_open[position]);
 
-                                bundle.putString("USERNAME", bundle.getString("USERNAME"));
-                                bundle.putString("SERVER_URL", serverUrl);
+                                bundle1.putString("USERNAME", bundle.getString("USERNAME"));
+                                bundle1.putString("SERVER_URL", serverUrl);
 
-                                intent.putExtras(bundle);
+                                intent.putExtras(bundle1);
                                 startActivity(intent);
                             }
                         });
@@ -158,6 +158,15 @@ public class LocalHospitals extends AppCompatActivity {
         });
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.private_doctors_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        materialSearchView.setMenuItem(item);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
         if(menuItem.getItemId() == android.R.id.home){

@@ -103,7 +103,6 @@
 
                         </LinearLayout>
                         <LinearLayout
-                            android:id="@+id/posts"
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="vertical"
@@ -113,12 +112,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Posts"
+                                android:text="Specialty"
                                 android:textSize="20sp"/>
                             <TextView
+                                android:id="@+id/doc_specialty"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="2"
+                                android:text="Specialty"
                                 android:textStyle="bold"
                                 android:textSize="14sp"
                                 android:paddingTop="10dp"
@@ -133,7 +133,7 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="360dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="center"
@@ -151,7 +151,7 @@
                         app:srcCompat="@drawable/ic_email" />
                     <TextView
                         android:id="@+id/doc_email"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="25dp"
                         android:layout_gravity="center_vertical"
@@ -172,7 +172,7 @@
                         app:srcCompat="@drawable/ic_phone" />
                     <TextView
                         android:id="@+id/doc_phone"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:paddingLeft="25dp"
@@ -180,25 +180,7 @@
                         android:text="+265 9947465473"/>
 
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_marginTop="15dp"
-                    android:paddingLeft="25dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        app:srcCompat="@drawable/ic_school" />
-                    <TextView
-                        android:id="@+id/doc_specialty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:paddingLeft="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:text="Specialty"/>
 
-                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/location_container"
                     android:layout_marginTop="15dp"
@@ -213,13 +195,36 @@
 
                     <TextView
                         android:id="@+id/doc_city"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="25dp"
                         android:clickable="true"
                         android:text="City" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="15dp"
+                    android:paddingLeft="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+                        <TextView
+                            android:id="@+id/doc_info_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="25dp"
+                            android:background="@drawable/rectangle_background"
+                            android:layout_gravity="center_vertical"
+                            android:padding="12dp"
+                            android:clickable="true"
+                            android:fontFamily="sans-serif-light"
+                            android:hint="About Hospital" />
+                    </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
                 <Button

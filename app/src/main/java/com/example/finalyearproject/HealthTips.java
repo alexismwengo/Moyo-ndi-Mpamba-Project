@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -49,6 +50,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HealthTips extends AppCompatActivity {
     private Toolbar toolbar;
@@ -97,8 +100,42 @@ public class HealthTips extends AppCompatActivity {
         tips_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Added to favourites", Toast.LENGTH_SHORT).show();
-                //tips_fav.setImageIcon(R.drawable.ic_favorite2);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl+"postFavourites.php",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                if(!response.equals("Error!") && !response.equals("Tip already in Favourites")){
+                                    //tips_fav.setImageResource(R.drawable.ic_favorite2);
+                                    Toast.makeText(HealthTips.this, "Added to Favourites", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HealthTips.this, response, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        , new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Toast.makeText(HealthTips.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+
+                        Map<String, String> params = new HashMap<String, String>();
+
+                        if(tipText.getText().toString().length()>0 && tipTitle.getText().toString().length()>0){
+                            params.put("title", tipTitle.getText().toString());
+                            params.put("text", tipText.getText().toString());
+                            params.put("user", bundle.getString("USERNAME"));
+                        }
+                        else {
+                            Toast.makeText(HealthTips.this, "Nothing in Favourites", Toast.LENGTH_SHORT).show();
+                        }
+                        return params;
+                    }
+                };
+                MySingleton.getInstance(HealthTips.this).addTorequestque(stringRequest);
             }
         });
 
@@ -118,25 +155,27 @@ public class HealthTips extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.tips_home){
                     new HealthTips();
+                    phpFile = "accessGenTips.php";
+                    getTips();
                 }
                 else if(menuItem.getItemId() == R.id.tips_favs){
-                    Toast.makeText(getApplicationContext(), "Comming soon...", Toast.LENGTH_SHORT).show();
+                    phpFile = "getFavourites.php";
+                    getTips();
+                    //Toast.makeText(getApplicationContext(),"favs", Toast.LENGTH_SHORT).show();
                 }
                 else if(menuItem.getItemId() == R.id.tips_filter){
                     AlertDialog.Builder builder = new AlertDialog.Builder(HealthTips.this);
-                    builder.setTitle("Select Tips to Show\n\n");
-
+                    builder.setTitle("Choose Tips to Show");
                     Spinner sorter = new Spinner(HealthTips.this);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    sorter.setLayoutParams(lp);
                     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.sort_tips_array,
                             android.R.layout.simple_spinner_item);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sorter.setAdapter(adapter);
-
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                    sorter.setLayoutParams(lp);
 
                     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
                         @Override
@@ -144,12 +183,15 @@ public class HealthTips extends AppCompatActivity {
                             switch (parent.getItemAtPosition(position).toString()){
                                 case "All Tips":
                                     phpFile = "accessGenTips.php";
+                                    bottomNavigationView.getMenu().findItem(R.id.tips_filter).setTitle( "All Tips");
                                     break;
                                 case "Food & Diets":
                                     phpFile = "accessFoodTips.php";
+                                    bottomNavigationView.getMenu().findItem(R.id.tips_filter).setTitle( "Food & Diets");
                                     break;
                                 case "Fitness":
                                     phpFile = "accessFitnessTips.php";
+                                    bottomNavigationView.getMenu().findItem(R.id.tips_filter).setTitle( "Fitness");
                                     break;
                                 default:
                                     phpFile = "accessGenTips.php";
@@ -201,8 +243,7 @@ public class HealthTips extends AppCompatActivity {
     }
 
     public void getTips(){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, serverUrl+""+phpFile,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl.concat(phpFile),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -218,8 +259,8 @@ public class HealthTips extends AppCompatActivity {
                             for(int i=0; i<jsonArray.length(); i++){
                                 jsonObject = jsonArray.getJSONObject(i);
 
-                                tipTitles[i] = jsonObject.getString("tip_title");
-                                tipTexts[i] = jsonObject.getString("tip_string");
+                                tipTitles[i] = jsonObject.getString("title");
+                                tipTexts[i] = jsonObject.getString("text");
                                 tip_image[i] = jsonObject.getString("image");
 
                             }
@@ -232,12 +273,24 @@ public class HealthTips extends AppCompatActivity {
                         tipTitle.setText(tipTitles[index]);
                         tipText.setText(tipTexts[index]);
                     }
-                }, new Response.ErrorListener() {
+                }
+                , new Response.ErrorListener(){
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(VolleyError error){
                 Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
             }
-        });
-        queue.add(stringRequest);
+            }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user", bundle.getString("USERNAME"));
+
+                return params;
+            }
+        };
+
+        MySingleton.getInstance(HealthTips.this).addTorequestque(stringRequest);
+
     }
 }

@@ -46,8 +46,9 @@
                     android:layout_marginRight="20dp">
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
                         <EditText
                             android:id="@+id/name_field"
                             android:layout_width="250dp"
@@ -58,8 +59,9 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
                         <EditText
                             android:id="@+id/email_field"
                             android:layout_width="250dp"
@@ -71,9 +73,10 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:passwordToggleEnabled="true"
+                        android:gravity="center"
                         app:passwordToggleTint="@color/colorPrimary">
                         <EditText
                             android:id="@+id/password_field"
@@ -86,8 +89,9 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         app:passwordToggleEnabled="true"
                         app:passwordToggleTint="@color/colorPrimary">
                         <EditText

@@ -1,0 +1,318 @@
+<html>
+<head>
+<title>HealthTips.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #008000; font-weight: bold;}
+.s3 { color: #808080; font-style: italic;}
+.s4 { color: #0000ff;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HealthTips.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>com.example.finalyearproject;
+
+<span class="s0">import </span>android.content.DialogInterface;
+<span class="s0">import </span>android.content.Intent;
+<span class="s0">import </span>android.net.Uri;
+<span class="s0">import </span>android.os.AsyncTask;
+<span class="s0">import </span>android.support.annotation.NonNull;
+<span class="s0">import </span>android.support.design.widget.BottomNavigationView;
+<span class="s0">import </span>android.support.v7.app.ActionBar;
+<span class="s0">import </span>android.support.v7.app.AlertDialog;
+<span class="s0">import </span>android.support.v7.app.AppCompatActivity;
+<span class="s0">import </span>android.os.Bundle;
+<span class="s0">import </span>android.support.v7.widget.Toolbar;
+<span class="s0">import </span>android.view.Menu;
+<span class="s0">import </span>android.view.MenuInflater;
+<span class="s0">import </span>android.view.MenuItem;
+<span class="s0">import </span>android.view.View;
+<span class="s0">import </span>android.widget.AdapterView;
+<span class="s0">import </span>android.widget.ArrayAdapter;
+<span class="s0">import </span>android.widget.EditText;
+<span class="s0">import </span>android.widget.ImageButton;
+<span class="s0">import </span>android.widget.LinearLayout;
+<span class="s0">import </span>android.widget.Spinner;
+<span class="s0">import </span>android.widget.TextView;
+<span class="s0">import </span>android.widget.Toast;
+
+<span class="s0">import </span>com.android.volley.AuthFailureError;
+<span class="s0">import </span>com.android.volley.Request;
+<span class="s0">import </span>com.android.volley.RequestQueue;
+<span class="s0">import </span>com.android.volley.Response;
+<span class="s0">import </span>com.android.volley.VolleyError;
+<span class="s0">import </span>com.android.volley.toolbox.StringRequest;
+<span class="s0">import </span>com.android.volley.toolbox.Volley;
+
+<span class="s0">import </span>org.json.JSONArray;
+<span class="s0">import </span>org.json.JSONException;
+<span class="s0">import </span>org.json.JSONObject;
+<span class="s0">import </span>org.jsoup.Jsoup;
+<span class="s0">import </span>org.jsoup.nodes.Document;
+<span class="s0">import </span>org.jsoup.nodes.Element;
+<span class="s0">import </span>org.jsoup.select.Elements;
+
+<span class="s0">import </span>java.io.BufferedReader;
+<span class="s0">import </span>java.io.InputStreamReader;
+<span class="s0">import </span>java.lang.reflect.Array;
+<span class="s0">import </span>java.net.HttpURLConnection;
+<span class="s0">import </span>java.net.MalformedURLException;
+<span class="s0">import </span>java.net.URL;
+<span class="s0">import </span>java.text.SimpleDateFormat;
+<span class="s0">import </span>java.util.ArrayList;
+<span class="s0">import </span>java.util.Arrays;
+<span class="s0">import </span>java.util.Date;
+<span class="s0">import </span>java.util.HashMap;
+<span class="s0">import </span>java.util.Map;
+
+<span class="s0">public class </span>HealthTips <span class="s0">extends </span>AppCompatActivity {
+    <span class="s0">private </span>Toolbar toolbar;
+    <span class="s0">private </span>TextView tipTitle, tipText, healthTips;
+    <span class="s0">private </span>ImageButton tips_share, tips_fav;
+    <span class="s0">private </span>BottomNavigationView bottomNavigationView;
+    <span class="s0">private </span>String [] tipTitles, tipTexts, tip_image;
+    <span class="s0">private </span>Bundle bundle;
+    <span class="s0">private </span>String serverUrl, phpFile;
+
+    @Override
+    <span class="s0">protected void </span>onCreate(Bundle savedInstanceState) {
+        <span class="s0">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_health_tips);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        <span class="s0">final </span>ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(<span class="s0">true</span>);
+
+        bundle = getIntent().getExtras();
+        serverUrl = bundle.getString(<span class="s2">&quot;SERVER_URL&quot;</span>);
+
+        <span class="s3">//phpFile = &quot;accessGenTips.php&quot;;</span>
+        phpFile = <span class="s2">&quot;accessGenTips.php&quot;</span>;
+
+        tipText = (TextView) findViewById(R.id.tip_text);
+        tipTitle = (TextView) findViewById(R.id.ttle);
+
+        getTips();
+
+        tips_share = (ImageButton) findViewById(R.id.share_icon);
+        tips_share.setOnClickListener(<span class="s0">new </span>View.OnClickListener() {
+            @Override
+            <span class="s0">public void </span>onClick(View v) {
+                Intent i = <span class="s0">new </span>Intent();
+                i.setAction(Intent.ACTION_SEND);
+                i.putExtra(Intent.EXTRA_TEXT, tipText.getText().toString());
+                i.setType(<span class="s2">&quot;text/plain&quot;</span>);
+                startActivity(i);
+            }
+        });
+
+        tips_fav = (ImageButton) findViewById(R.id.fav_icon);
+        tips_fav.setOnClickListener(<span class="s0">new </span>View.OnClickListener() {
+            @Override
+            <span class="s0">public void </span>onClick(View v) {
+                StringRequest stringRequest = <span class="s0">new </span>StringRequest(Request.Method.POST, serverUrl+<span class="s2">&quot;postFavourites.php&quot;</span>,
+                        <span class="s0">new </span>Response.Listener&lt;String&gt;() {
+                            @Override
+                            <span class="s0">public void </span>onResponse(String response) {
+                                <span class="s0">if</span>(!response.equals(<span class="s2">&quot;Error!&quot;</span>) &amp;&amp; !response.equals(<span class="s2">&quot;Tip already in Favourites&quot;</span>)){
+                                    <span class="s3">//tips_fav.setImageResource(R.drawable.ic_favorite2);</span>
+                                    Toast.makeText(HealthTips.<span class="s0">this</span>, <span class="s2">&quot;Added to Favourites&quot;</span>, Toast.LENGTH_SHORT).show();
+                                }
+                                <span class="s0">else </span>{
+                                    Toast.makeText(HealthTips.<span class="s0">this</span>, response, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        , <span class="s0">new </span>Response.ErrorListener(){
+                    @Override
+                    <span class="s0">public void </span>onErrorResponse(VolleyError error){
+                        Toast.makeText(HealthTips.<span class="s0">this</span>, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }){
+                    @Override
+                    <span class="s0">protected </span>Map&lt;String, String&gt; getParams() <span class="s0">throws </span>AuthFailureError {
+
+                        Map&lt;String, String&gt; params = <span class="s0">new </span>HashMap&lt;String, String&gt;();
+
+                        <span class="s0">if</span>(tipText.getText().toString().length()&gt;<span class="s4">0 </span>&amp;&amp; tipTitle.getText().toString().length()&gt;<span class="s4">0</span>){
+                            params.put(<span class="s2">&quot;title&quot;</span>, tipTitle.getText().toString());
+                            params.put(<span class="s2">&quot;text&quot;</span>, tipText.getText().toString());
+                            params.put(<span class="s2">&quot;user&quot;</span>, bundle.getString(<span class="s2">&quot;USERNAME&quot;</span>));
+                        }
+                        <span class="s0">else </span>{
+                            Toast.makeText(HealthTips.<span class="s0">this</span>, <span class="s2">&quot;Nothing in Favourites&quot;</span>, Toast.LENGTH_SHORT).show();
+                        }
+                        <span class="s0">return </span>params;
+                    }
+                };
+                <a href="MySingleton.java.html">MySingleton</a>.getInstance(HealthTips.<span class="s0">this</span>).addTorequestque(stringRequest);
+            }
+        });
+
+        healthTips = (TextView) findViewById(R.id.healthtips_com);
+        healthTips.setOnClickListener(<span class="s0">new </span>View.OnClickListener() {
+            @Override
+            <span class="s0">public void </span>onClick(View v) {
+                Uri someUri = Uri.parse(<span class="s2">&quot;https://www.thegoodbody.com/&quot;</span>); <span class="s3">//tips site</span>
+                Intent i = <span class="s0">new </span>Intent(Intent.ACTION_VIEW, someUri);
+                startActivity(i);
+            }
+        });
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(<span class="s0">new </span>BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            <span class="s0">public boolean </span>onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                <span class="s0">if</span>(menuItem.getItemId() == R.id.tips_home){
+                    <span class="s0">new </span>HealthTips();
+                    phpFile = <span class="s2">&quot;accessGenTips.php&quot;</span>;
+                    getTips();
+                }
+                <span class="s0">else if</span>(menuItem.getItemId() == R.id.tips_favs){
+                    phpFile = <span class="s2">&quot;getFavourites.php&quot;</span>;
+                    getTips();
+                    <span class="s3">//Toast.makeText(getApplicationContext(),&quot;favs&quot;, Toast.LENGTH_SHORT).show();</span>
+                }
+                <span class="s0">else if</span>(menuItem.getItemId() == R.id.tips_filter){
+                    AlertDialog.Builder builder = <span class="s0">new </span>AlertDialog.Builder(HealthTips.<span class="s0">this</span>);
+                    builder.setTitle(<span class="s2">&quot;Choose Tips to Show&quot;</span>);
+                    Spinner sorter = <span class="s0">new </span>Spinner(HealthTips.<span class="s0">this</span>);
+                    LinearLayout.LayoutParams lp = <span class="s0">new </span>LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    sorter.setLayoutParams(lp);
+                    ArrayAdapter&lt;CharSequence&gt; adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.sort_tips_array,
+                            android.R.layout.simple_spinner_item);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sorter.setAdapter(adapter);
+
+                    AdapterView.OnItemSelectedListener onItemSelectedListener = <span class="s0">new </span>AdapterView.OnItemSelectedListener() {
+                        @Override
+                        <span class="s0">public void </span>onItemSelected(AdapterView&lt;?&gt; parent, View view, <span class="s0">int </span>position, <span class="s0">long </span>id) {
+                            <span class="s0">switch </span>(parent.getItemAtPosition(position).toString()){
+                                <span class="s0">case </span><span class="s2">&quot;All Tips&quot;</span>:
+                                    phpFile = <span class="s2">&quot;accessGenTips.php&quot;</span>;
+                                    bottomNavigationView.getMenu().findItem(R.id.tips_filter).setTitle( <span class="s2">&quot;All Tips&quot;</span>);
+                                    <span class="s0">break</span>;
+                                <span class="s0">case </span><span class="s2">&quot;Food &amp; Diets&quot;</span>:
+                                    phpFile = <span class="s2">&quot;accessFoodTips.php&quot;</span>;
+                                    bottomNavigationView.getMenu().findItem(R.id.tips_filter).setTitle( <span class="s2">&quot;Food &amp; Diets&quot;</span>);
+                                    <span class="s0">break</span>;
+                                <span class="s0">case </span><span class="s2">&quot;Fitness&quot;</span>:
+                                    phpFile = <span class="s2">&quot;accessFitnessTips.php&quot;</span>;
+                                    bottomNavigationView.getMenu().findItem(R.id.tips_filter).setTitle( <span class="s2">&quot;Fitness&quot;</span>);
+                                    <span class="s0">break</span>;
+                                <span class="s0">default</span>:
+                                    phpFile = <span class="s2">&quot;accessGenTips.php&quot;</span>;
+                            }
+                        }
+
+                        @Override
+                        <span class="s0">public void </span>onNothingSelected(AdapterView&lt;?&gt; parent) {
+
+                        }
+                    };
+                    sorter.setOnItemSelectedListener(onItemSelectedListener);
+
+                    builder.setView(sorter);
+                    builder.setPositiveButton(<span class="s2">&quot;Ok&quot;</span>, <span class="s0">new </span>DialogInterface.OnClickListener() {
+                        @Override
+                        <span class="s0">public void </span>onClick(DialogInterface dialog, <span class="s0">int </span>which) {
+                            getTips();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                <span class="s0">return true</span>;
+            }
+        });
+
+    }
+    @Override
+    <span class="s0">public boolean </span>onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.health_tips_menu, menu);
+
+        <span class="s0">return true</span>;
+    }
+
+    @Override
+    <span class="s0">public boolean </span>onOptionsItemSelected(MenuItem menuItem){
+        <span class="s0">if</span>(menuItem.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        <span class="s0">if</span>(menuItem.getItemId() == R.id.health_tips_terms){
+            Uri someUri = Uri.parse(<span class="s2">&quot;http://www.moyondimpamba.com/borrowedtips.php&quot;</span>);
+            Intent i = <span class="s0">new </span>Intent(Intent.ACTION_VIEW, someUri);
+            startActivity(i);
+            <span class="s0">return true</span>;
+        }
+        <span class="s0">return true</span>;
+    }
+
+    <span class="s0">public void </span>getTips(){
+        StringRequest stringRequest = <span class="s0">new </span>StringRequest(Request.Method.POST, serverUrl.concat(phpFile),
+                <span class="s0">new </span>Response.Listener&lt;String&gt;() {
+                    @Override
+                    <span class="s0">public void </span>onResponse(String response) {
+                        <span class="s0">try </span>{
+                            JSONArray jsonArray = <span class="s0">new </span>JSONArray(response);
+
+                            JSONObject jsonObject = <span class="s0">null</span>;
+
+                            tipTitles = <span class="s0">new </span>String[jsonArray.length()];
+                            tipTexts =  <span class="s0">new </span>String[jsonArray.length()];
+                            tip_image =  <span class="s0">new </span>String[jsonArray.length()];
+
+                            <span class="s0">for</span>(<span class="s0">int </span>i=<span class="s4">0</span>; i&lt;jsonArray.length(); i++){
+                                jsonObject = jsonArray.getJSONObject(i);
+
+                                tipTitles[i] = jsonObject.getString(<span class="s2">&quot;title&quot;</span>);
+                                tipTexts[i] = jsonObject.getString(<span class="s2">&quot;text&quot;</span>);
+                                tip_image[i] = jsonObject.getString(<span class="s2">&quot;image&quot;</span>);
+
+                            }
+
+                        } <span class="s0">catch </span>(JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        <span class="s0">int </span>index = (<span class="s0">int</span>)(Math.random()*tipTitles.length);
+                        tipTitle.setText(tipTitles[index]);
+                        tipText.setText(tipTexts[index]);
+                    }
+                }
+                , <span class="s0">new </span>Response.ErrorListener(){
+            @Override
+            <span class="s0">public void </span>onErrorResponse(VolleyError error){
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+            }){
+            @Override
+            <span class="s0">protected </span>Map&lt;String, String&gt; getParams() <span class="s0">throws </span>AuthFailureError {
+
+                Map&lt;String, String&gt; params = <span class="s0">new </span>HashMap&lt;String, String&gt;();
+                params.put(<span class="s2">&quot;user&quot;</span>, bundle.getString(<span class="s2">&quot;USERNAME&quot;</span>));
+
+                <span class="s0">return </span>params;
+            }
+        };
+
+        <a href="MySingleton.java.html">MySingleton</a>.getInstance(HealthTips.<span class="s0">this</span>).addTorequestque(stringRequest);
+
+    }
+}
+</pre>
+</body>
+</html>

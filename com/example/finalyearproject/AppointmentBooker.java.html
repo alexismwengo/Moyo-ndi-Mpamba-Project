@@ -1,0 +1,290 @@
+<html>
+<head>
+<title>AppointmentBooker.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #008000; font-weight: bold;}
+.s3 { color: #808080; font-style: italic;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+AppointmentBooker.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>com.example.finalyearproject;
+
+<span class="s0">import </span>android.app.DatePickerDialog;
+<span class="s0">import </span>android.content.DialogInterface;
+<span class="s0">import </span>android.content.Intent;
+<span class="s0">import </span>android.graphics.Color;
+<span class="s0">import </span>android.graphics.drawable.ColorDrawable;
+<span class="s0">import </span>android.graphics.drawable.Drawable;
+<span class="s0">import </span>android.net.Uri;
+<span class="s0">import </span>android.support.design.widget.TextInputLayout;
+<span class="s0">import </span>android.support.v7.app.ActionBar;
+<span class="s0">import </span>android.support.v7.app.AlertDialog;
+<span class="s0">import </span>android.support.v7.app.AppCompatActivity;
+<span class="s0">import </span>android.os.Bundle;
+<span class="s0">import </span>android.support.v7.widget.Toolbar;
+<span class="s0">import </span>android.util.Log;
+<span class="s0">import </span>android.view.Menu;
+<span class="s0">import </span>android.view.MenuInflater;
+<span class="s0">import </span>android.view.MenuItem;
+<span class="s0">import </span>android.view.View;
+<span class="s0">import </span>android.widget.Button;
+<span class="s0">import </span>android.widget.DatePicker;
+<span class="s0">import </span>android.widget.EditText;
+<span class="s0">import </span>android.widget.ImageView;
+<span class="s0">import </span>android.widget.RadioButton;
+<span class="s0">import </span>android.widget.RadioGroup;
+<span class="s0">import </span>android.widget.TextView;
+<span class="s0">import </span>android.widget.Toast;
+
+<span class="s0">import </span>com.android.volley.AuthFailureError;
+<span class="s0">import </span>com.android.volley.Request;
+<span class="s0">import </span>com.android.volley.Response;
+<span class="s0">import </span>com.android.volley.VolleyError;
+<span class="s0">import </span>com.android.volley.toolbox.StringRequest;
+
+<span class="s0">import </span>java.text.SimpleDateFormat;
+<span class="s0">import </span>java.util.Calendar;
+<span class="s0">import </span>java.util.Date;
+<span class="s0">import </span>java.util.GregorianCalendar;
+<span class="s0">import </span>java.util.HashMap;
+<span class="s0">import </span>java.util.Locale;
+<span class="s0">import </span>java.util.Map;
+
+<span class="s0">public class </span>AppointmentBooker <span class="s0">extends </span>AppCompatActivity {
+    <span class="s0">private </span>Toolbar toolbar;
+    Bundle bundle;
+    <span class="s0">private </span>String dateString, firstname, lastname, city, phone, proffession, days_available, hours, appointment_time;
+    <span class="s0">private </span>TextView name, location, profession, show_date;
+    <span class="s0">private </span>DatePickerDialog.OnDateSetListener dateSetListener;
+    <span class="s0">private </span>Button bookingButton;
+    <span class="s0">private </span>ImageView doc_hospital_image;
+    <span class="s0">private </span>RadioGroup radioGroup, radioGroup2;
+    <span class="s0">private </span>EditText patient_name, patient_age, patient_phone, patient_address, additional_comments;
+    <span class="s0">private </span>Calendar myCalendar;
+    <span class="s0">private </span>String serverUrl, activityFrom;
+    @Override
+    <span class="s0">protected void </span>onCreate(Bundle savedInstanceState) {
+        <span class="s0">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_appointment_booker);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        <span class="s0">final </span>ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(<span class="s0">true</span>);
+
+        bundle = getIntent().getExtras();
+        serverUrl = bundle.getString(<span class="s2">&quot;SERVER_URL&quot;</span>);
+        activityFrom = bundle.getString(<span class="s2">&quot;activity&quot;</span>);
+
+        firstname = bundle.getString(<span class="s2">&quot;firstname&quot;</span>);
+        lastname = bundle.getString(<span class="s2">&quot;lastname&quot;</span>);
+        city = bundle.getString(<span class="s2">&quot;city&quot;</span>);
+        phone = bundle.getString(<span class="s2">&quot;phone&quot;</span>);
+        proffession = bundle.getString(<span class="s2">&quot;proffession&quot;</span>);
+        days_available = bundle.getString(<span class="s2">&quot;days_available&quot;</span>);
+        hours = bundle.getString(<span class="s2">&quot;hours&quot;</span>);
+        doc_hospital_image = (ImageView) findViewById(R.id.doc_image);
+
+        name = (TextView)findViewById(R.id.doc_name);
+        profession = (TextView)findViewById(R.id.doc_profession);
+        location = (TextView)findViewById(R.id.doc_location);
+
+        <span class="s0">if</span>(activityFrom.equals(<span class="s2">&quot;Doctors&quot;</span>)){
+            name.setText(<span class="s2">&quot;Dr. &quot;</span>+firstname+<span class="s2">&quot; &quot;</span>+lastname);
+            profession.setText(proffession);
+        }
+        <span class="s0">else if</span>(activityFrom.equals(<span class="s2">&quot;HealthCentre&quot;</span>)){
+            name.setText(bundle.getString(<span class="s2">&quot;hospital_name&quot;</span>));
+            doc_hospital_image.setImageResource(R.drawable.image_hosp);
+
+            profession.setText(days_available);
+            Drawable img = getApplicationContext().getResources().getDrawable( R.drawable.ic_date2);
+            profession.setCompoundDrawablesWithIntrinsicBounds( img, <span class="s0">null</span>, <span class="s0">null</span>, <span class="s0">null</span>);
+        }
+        location.setText(city);
+
+        show_date = (TextView) findViewById(R.id.show_date);
+
+        myCalendar = Calendar.getInstance();
+        <span class="s0">final </span>DatePickerDialog.OnDateSetListener date = <span class="s0">new </span>DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            <span class="s0">public void </span>onDateSet(DatePicker view, <span class="s0">int </span>year, <span class="s0">int </span>monthOfYear, <span class="s0">int </span>dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+        show_date.setOnClickListener(<span class="s0">new </span>View.OnClickListener() {
+            @Override
+            <span class="s0">public void </span>onClick(View v) {
+                <span class="s0">new </span>DatePickerDialog(AppointmentBooker.<span class="s0">this</span>, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        radioGroup = (RadioGroup) findViewById(R.id.radio_button);
+        radioGroup.setOnCheckedChangeListener(<span class="s0">new </span>RadioGroup.OnCheckedChangeListener() {
+            @Override
+            <span class="s0">public void </span>onCheckedChanged(RadioGroup group, <span class="s0">int </span>checkedId) {
+
+                <span class="s0">if</span>(radioGroup2.isSelected()){
+                    radioGroup2.setSelected(<span class="s0">false</span>);
+                }
+
+                <span class="s0">int </span>selectedId = radioGroup.getCheckedRadioButtonId();
+                RadioButton rdbtn = (RadioButton)findViewById(selectedId);
+                appointment_time = rdbtn.getText().toString()+<span class="s2">&quot; am&quot;</span>;
+
+                <span class="s3">//Toast.makeText(getApplicationContext(), appointment_time, Toast.LENGTH_SHORT).show();</span>
+            }
+        });
+        radioGroup2 = (RadioGroup) findViewById(R.id.radio_button2);
+        radioGroup2.setOnCheckedChangeListener(<span class="s0">new </span>RadioGroup.OnCheckedChangeListener() {
+            @Override
+            <span class="s0">public void </span>onCheckedChanged(RadioGroup group, <span class="s0">int </span>checkedId) {
+
+                <span class="s0">if</span>(radioGroup.isSelected()){
+                    radioGroup.setSelected(<span class="s0">false</span>);
+                }
+
+                <span class="s0">int </span>selectedId = radioGroup2.getCheckedRadioButtonId();
+                RadioButton rdbtn = (RadioButton)findViewById(selectedId);
+                appointment_time = rdbtn.getText().toString()+<span class="s2">&quot; pm&quot;</span>;
+
+                Toast.makeText(getApplicationContext(), appointment_time, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        patient_name = findViewById(R.id.patient_name);
+        patient_name.setText(bundle.getString(<span class="s2">&quot;USERNAME&quot;</span>));
+
+        patient_age = findViewById(R.id.patient_age);
+        patient_address = findViewById(R.id.patient_address);
+        patient_phone = findViewById(R.id.patient_phone);
+        additional_comments = findViewById(R.id.patient_message);
+
+        bookingButton = findViewById(R.id.booking_button);
+        bookingButton.setOnClickListener(<span class="s0">new </span>View.OnClickListener() {
+            AlertDialog.Builder builder;
+            @Override
+            <span class="s0">public void </span>onClick(View v) {
+
+                <span class="s0">if</span>(show_date.getText().toString().equals(<span class="s0">null</span>)){
+                    Toast.makeText(getApplicationContext(), <span class="s2">&quot;error&quot;</span>, Toast.LENGTH_SHORT).show();
+                }
+
+                builder = <span class="s0">new </span>AlertDialog.Builder(AppointmentBooker.<span class="s0">this</span>);
+
+                StringRequest stringRequest = <span class="s0">new </span>StringRequest(Request.Method.POST, serverUrl+<span class="s2">&quot;appointmentBooker.php&quot;</span>,
+                        <span class="s0">new </span>Response.Listener&lt;String&gt;() {
+                            @Override
+                            <span class="s0">public void </span>onResponse(<span class="s0">final </span>String response) {
+
+                                <span class="s0">if</span>(response.equals(<span class="s2">&quot;Booking Successful&quot;</span>)){
+                                    builder.setMessage(response+<span class="s2">&quot;</span><span class="s0">\n</span><span class="s2">Await Doctor Confirmation.&quot;</span>);
+                                }
+                                <span class="s0">else</span>{
+                                    builder.setMessage(response+<span class="s2">&quot; </span><span class="s0">\n</span><span class="s2">Try again later.&quot;</span>);
+                                }
+
+                                builder.setPositiveButton(<span class="s2">&quot;Ok&quot;</span>, <span class="s0">new </span>DialogInterface.OnClickListener() {
+                                    @Override
+                                    <span class="s0">public void </span>onClick(DialogInterface dialog, <span class="s0">int </span>which) {
+                                        <span class="s0">if</span>(response.equals(<span class="s2">&quot;Booking Successful&quot;</span>)){
+                                            patient_age.setText(<span class="s2">&quot;&quot;</span>);
+                                            patient_address.setText(<span class="s2">&quot;&quot;</span>);
+                                            patient_phone.setText(<span class="s2">&quot;&quot;</span>);
+                                            additional_comments.setText(<span class="s2">&quot;&quot;</span>);
+                                            radioGroup.setSelected(<span class="s0">false</span>);
+                                            radioGroup2.setSelected(<span class="s0">false</span>);
+                                            onBackPressed();
+                                        }
+                                    }
+                                });
+                                AlertDialog alertDialog = builder.create();
+                                <span class="s3">//alertDialog.setIcon(R.drawable.ic_info_outline);</span>
+                                alertDialog.show();
+                            }
+                        }
+                        , <span class="s0">new </span>Response.ErrorListener(){
+                    @Override
+                    <span class="s0">public void </span>onErrorResponse(VolleyError error){
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }){
+                    @Override
+                    <span class="s0">protected </span>Map&lt;String, String&gt; getParams() <span class="s0">throws </span>AuthFailureError {
+
+                        Map&lt;String, String&gt; params = <span class="s0">new </span>HashMap&lt;String, String&gt;();
+                        params.put(<span class="s2">&quot;patient_age&quot;</span>, patient_age.getText().toString().trim());
+                        params.put(<span class="s2">&quot;patient_name&quot;</span>, bundle.getString(<span class="s2">&quot;USERNAME&quot;</span>));
+                        params.put(<span class="s2">&quot;patient_address&quot;</span>, patient_address.getText().toString().trim());
+                        params.put(<span class="s2">&quot;patient_phone&quot;</span>, patient_phone.getText().toString().trim());
+                        params.put(<span class="s2">&quot;patient_message&quot;</span>, additional_comments.getText().toString().trim());
+                        params.put(<span class="s2">&quot;date&quot;</span>, dateString);
+                        params.put(<span class="s2">&quot;appointment_time&quot;</span>, appointment_time);
+                        params.put(<span class="s2">&quot;city&quot;</span>, city);
+                        params.put(<span class="s2">&quot;phone&quot;</span>, phone);
+
+                        <span class="s0">if</span>(activityFrom.equals(<span class="s2">&quot;Doctors&quot;</span>)){
+                            params.put(<span class="s2">&quot;sent_to&quot;</span>, <span class="s2">&quot;Private Doctor&quot;</span>);
+                            params.put(<span class="s2">&quot;name&quot;</span>, firstname+<span class="s2">&quot; &quot;</span>+lastname);
+                        }
+                        <span class="s0">else if</span>(activityFrom.equals(<span class="s2">&quot;HealthCentre&quot;</span>)){
+                            params.put(<span class="s2">&quot;sent_to&quot;</span>, <span class="s2">&quot;Health Facility&quot;</span>);
+                            params.put(<span class="s2">&quot;name&quot;</span>, bundle.getString(<span class="s2">&quot;hospital_name&quot;</span>));
+                        }
+                        <span class="s0">return </span>params;
+                    }
+                };
+
+                <a href="MySingleton.java.html">MySingleton</a>.getInstance(AppointmentBooker.<span class="s0">this</span>).addTorequestque(stringRequest);
+            }
+        });
+    }
+
+    <span class="s0">private void </span>updateLabel() {
+        String myFormat = <span class="s2">&quot;E, MMMM dd yyyy&quot;</span>;
+        SimpleDateFormat sdf = <span class="s0">new </span>SimpleDateFormat(myFormat, Locale.US);
+        show_date.setText(sdf.format(myCalendar.getTime()));
+
+        SimpleDateFormat format = <span class="s0">new </span>SimpleDateFormat(<span class="s2">&quot;yyyy-MM-dd&quot;</span>);
+        dateString = format.format(myCalendar.getTime());
+    }
+
+    @Override
+    <span class="s0">public boolean </span>onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.booking_menu, menu);
+        <span class="s0">return true</span>;
+    }
+
+    @Override
+    <span class="s0">public boolean </span>onOptionsItemSelected(MenuItem menuItem){
+        <span class="s0">if</span>(menuItem.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        <span class="s0">if</span>(menuItem.getItemId() == R.id.photo){
+            Toast.makeText(getApplicationContext(),<span class="s2">&quot;Photo added.&quot;</span>, Toast.LENGTH_LONG).show();
+        }
+        <span class="s0">return true</span>;
+    }
+}
+</pre>
+</body>
+</html>

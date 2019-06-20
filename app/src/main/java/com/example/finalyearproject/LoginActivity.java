@@ -147,7 +147,12 @@ public class LoginActivity extends AppCompatActivity {
         builder.setNeutralButton("More Help", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                Intent intent = new Intent(LoginActivity.this, ConfigurationHelp.class);
+                Bundle b = new Bundle();
+                b.putString("SERVER_URL", ServerUrl);
+                b.putString("activity", "LoginActivity");
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
 

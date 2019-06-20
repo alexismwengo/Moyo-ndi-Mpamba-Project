@@ -1,0 +1,292 @@
+<html>
+<head>
+<title>PrivateDoctors.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #008000; font-weight: bold;}
+.s3 { color: #0000ff;}
+.s4 { color: #808080; font-style: italic;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PrivateDoctors.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>com.example.finalyearproject;
+
+<span class="s0">import </span>android.app.Activity;
+<span class="s0">import </span>android.content.Intent;
+<span class="s0">import </span>android.net.Uri;
+<span class="s0">import </span>android.support.v7.app.ActionBar;
+<span class="s0">import </span>android.support.v7.app.AppCompatActivity;
+<span class="s0">import </span>android.os.Bundle;
+<span class="s0">import </span>android.support.v7.widget.Toolbar;
+<span class="s0">import </span>android.util.Log;
+<span class="s0">import </span>android.view.LayoutInflater;
+<span class="s0">import </span>android.view.Menu;
+<span class="s0">import </span>android.view.MenuInflater;
+<span class="s0">import </span>android.view.MenuItem;
+<span class="s0">import </span>android.view.View;
+<span class="s0">import </span>android.view.ViewGroup;
+<span class="s0">import </span>android.widget.AdapterView;
+<span class="s0">import </span>android.widget.ArrayAdapter;
+<span class="s0">import </span>android.widget.BaseAdapter;
+<span class="s0">import </span>android.widget.ImageView;
+<span class="s0">import </span>android.widget.ListView;
+<span class="s0">import </span>android.widget.TextView;
+<span class="s0">import </span>android.widget.Toast;
+
+<span class="s0">import </span>com.android.volley.Request;
+<span class="s0">import </span>com.android.volley.RequestQueue;
+<span class="s0">import </span>com.android.volley.Response;
+<span class="s0">import </span>com.android.volley.VolleyError;
+<span class="s0">import </span>com.android.volley.toolbox.StringRequest;
+<span class="s0">import </span>com.android.volley.toolbox.Volley;
+<span class="s0">import </span>com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+<span class="s0">import </span>org.json.JSONArray;
+<span class="s0">import </span>org.json.JSONException;
+<span class="s0">import </span>org.json.JSONObject;
+
+<span class="s0">import </span>java.util.ArrayList;
+<span class="s0">import </span>java.util.Arrays;
+<span class="s0">import </span>java.util.List;
+<span class="s0">import </span>java.util.Map;
+
+<span class="s0">public class </span>PrivateDoctors <span class="s0">extends </span>AppCompatActivity {
+    <span class="s0">private </span>Toolbar toolbar;
+
+    String [] firstname, lastname, email, city, phone, doc_info, second_phone, proffession, message, days_available, hours;
+    ArrayList &lt;String&gt; firstnameArray, lastnameArray, proffessionArray, cityArray;
+    ListView listView;
+    List&lt;String&gt; lstFound;
+    MaterialSearchView materialSearchView;
+    <span class="s0">private </span>Bundle bundle;
+    String serverUrl;
+
+    @Override
+    <span class="s0">protected void </span>onCreate(Bundle savedInstanceState) {
+        <span class="s0">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_private_doctors);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        <span class="s0">final </span>ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(<span class="s0">true</span>);
+
+        bundle = getIntent().getExtras();
+        serverUrl = bundle.getString(<span class="s2">&quot;SERVER_URL&quot;</span>);
+
+        listView = (ListView) findViewById(R.id.lview);
+
+        lastnameArray = <span class="s0">new </span>ArrayList&lt;String&gt;();
+        proffessionArray = <span class="s0">new </span>ArrayList&lt;String&gt;();
+        cityArray = <span class="s0">new </span>ArrayList&lt;String&gt;();
+
+        materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+        materialSearchView.setOnSearchViewListener(<span class="s0">new </span>MaterialSearchView.SearchViewListener() {
+            @Override
+            <span class="s0">public void </span>onSearchViewShown() {
+
+            }
+
+            @Override
+            <span class="s0">public void </span>onSearchViewClosed() {
+                listView = (ListView) findViewById(R.id.lview);
+                CustomAdapter customAdapter = <span class="s0">new </span>CustomAdapter();
+                listView.setAdapter(customAdapter);
+            }
+        });
+        materialSearchView.setOnQueryTextListener(<span class="s0">new </span>MaterialSearchView.OnQueryTextListener() {
+            @Override
+            <span class="s0">public boolean </span>onQueryTextSubmit(String query) {
+                <span class="s0">return false</span>;
+            }
+
+            @Override
+            <span class="s0">public boolean </span>onQueryTextChange(String newText) {
+                <span class="s0">if</span>(newText != <span class="s0">null </span>&amp;&amp; !newText.isEmpty() &amp;&amp; newText.length()&gt;<span class="s3">0</span>){
+                    <span class="s4">/*lstFound = new ArrayList&lt;String&gt;(); 
+<a name="l2"><span class="ln">2    </span></a>                    for(String item: firstname){ 
+<a name="l3"><span class="ln">3    </span></a>                        if(item.contains(newText)){ 
+<a name="l4"><span class="ln">4    </span></a>                            //lstFound.add(item); 
+<a name="l5"><span class="ln">5    </span></a> 
+<a name="l6"><span class="ln">6    </span></a>                            //Toast.makeText(getApplicationContext(), lstFound.get(0), Toast.LENGTH_SHORT).show(); 
+<a name="l7"><span class="ln">7    </span></a> 
+<a name="l8"><span class="ln">8    </span></a>                            //int index = firstnameArray.indexOf(item); 
+<a name="l9"><span class="ln">9    </span></a>                            //cityArray.add(city[index]); 
+<a name="l10"><span class="ln">10   </span></a>                            //lastnameArray.add(lastname[index]); 
+<a name="l11"><span class="ln">11   </span></a>                            //proffessionArray.add(proffession[index]); 
+<a name="l12"><span class="ln">12   </span></a>                        } 
+<a name="l13"><span class="ln">13   </span></a>                        //Toast.makeText(getApplicationContext(), cityArray.get(0), Toast.LENGTH_SHORT).show(); 
+<a name="l14"><span class="ln">14   </span></a>                        //Toast.makeText(getApplicationContext(), lstFound.get(0), Toast.LENGTH_SHORT).show(); 
+<a name="l15"><span class="ln">15   </span></a>                    } 
+<a name="l16"><span class="ln">16   </span></a>                    //CustomAdapter2 customAdapter2 = new CustomAdapter2(); 
+<a name="l17"><span class="ln">17   </span></a>                    //listView.setAdapter(customAdapter2);*/</span>
+                }
+                <span class="s0">else</span>{
+                    <span class="s4">//CustomAdapter customAdapter = new CustomAdapter();</span>
+                    //listView.setAdapter(customAdapter);
+                }
+                <span class="s0">return true</span>;
+            }
+        });
+
+        <span class="s0">final </span>Bundle main_bundle = getIntent().getExtras();
+
+        RequestQueue queue = Volley.newRequestQueue(<span class="s0">this</span>);
+
+        StringRequest stringRequest = <span class="s0">new </span>StringRequest(Request.Method.GET, serverUrl+<span class="s2">&quot;accessDocs.php&quot;</span>,
+                <span class="s0">new </span>Response.Listener&lt;String&gt;() {
+                    @Override
+                    <span class="s0">public void </span>onResponse(String response) {
+                        <span class="s0">try </span>{
+                            JSONArray jsonArray = <span class="s0">new </span>JSONArray(response);
+
+                            JSONObject jsonObject = <span class="s0">null</span>;
+
+                            firstname = <span class="s0">new </span>String[jsonArray.length()];
+                            lastname =  <span class="s0">new </span>String[jsonArray.length()];
+                            proffession =  <span class="s0">new </span>String[jsonArray.length()];
+                            city =  <span class="s0">new </span>String[jsonArray.length()];
+                            phone =  <span class="s0">new </span>String[jsonArray.length()];
+                            email =  <span class="s0">new </span>String[jsonArray.length()];
+                            doc_info =  <span class="s0">new </span>String[jsonArray.length()];
+                            message =  <span class="s0">new </span>String[jsonArray.length()];
+                            second_phone =  <span class="s0">new </span>String[jsonArray.length()];
+                            days_available =  <span class="s0">new </span>String[jsonArray.length()];
+                            hours =  <span class="s0">new </span>String[jsonArray.length()];
+
+                            <span class="s0">for</span>(<span class="s0">int </span>i=<span class="s3">0</span>; i&lt;jsonArray.length(); i++){
+                                jsonObject = jsonArray.getJSONObject(i);
+
+                                firstname[i] = jsonObject.getString(<span class="s2">&quot;firstname&quot;</span>);
+                                lastname[i] = jsonObject.getString(<span class="s2">&quot;lastname&quot;</span>);
+                                proffession[i] = jsonObject.getString(<span class="s2">&quot;proffession&quot;</span>);
+                                city[i] = jsonObject.getString(<span class="s2">&quot;city&quot;</span>);
+                                phone[i] = jsonObject.getString(<span class="s2">&quot;phone&quot;</span>);
+                                email[i] = jsonObject.getString(<span class="s2">&quot;email&quot;</span>);
+                                doc_info[i] = jsonObject.getString(<span class="s2">&quot;doc_info&quot;</span>);
+                                message[i] = jsonObject.getString(<span class="s2">&quot;message&quot;</span>);
+                                second_phone[i] = jsonObject.getString(<span class="s2">&quot;second_phone&quot;</span>);
+                                days_available[i] = jsonObject.getString(<span class="s2">&quot;days_available&quot;</span>);
+                                hours[i] = jsonObject.getString(<span class="s2">&quot;hours&quot;</span>);
+
+                            }
+
+                        } <span class="s0">catch </span>(JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        CustomAdapter customAdapter = <span class="s0">new </span>CustomAdapter();
+                        listView.setAdapter(customAdapter);
+
+                        listView.setOnItemClickListener(<span class="s0">new </span>AdapterView.OnItemClickListener() {
+                            @Override
+                            <span class="s0">public void </span>onItemClick(AdapterView&lt;?&gt; parent, View view, <span class="s0">int </span>position, <span class="s0">long </span>id) {
+                                Intent intent = <span class="s0">new </span>Intent(getApplicationContext(), <a href="DoctorDetails.java.html">DoctorDetails</a>.<span class="s0">class</span>);
+                                Bundle bundle = <span class="s0">new </span>Bundle();
+
+                                TextView textView = (TextView) view.findViewById(R.id.profile_name);
+                                String text = textView.getText().toString();
+                                String first[] = text.split(<span class="s2">&quot; &quot;</span>);
+                                String fname = first[<span class="s3">1</span>];
+
+                                ArrayList&lt;String&gt; list =<span class="s0">new </span>ArrayList&lt;String&gt;(Arrays.asList(firstname));
+                                <span class="s0">int </span>index = list.indexOf(fname);
+
+                                bundle.putString(<span class="s2">&quot;firstname&quot;</span>, firstname[index]);
+                                bundle.putString(<span class="s2">&quot;lastname&quot;</span>, lastname[index]);
+                                bundle.putString(<span class="s2">&quot;proffession&quot;</span>, proffession[index]);
+                                bundle.putString(<span class="s2">&quot;city&quot;</span>, city[index]);
+                                bundle.putString(<span class="s2">&quot;phone&quot;</span>, phone[index]);
+                                bundle.putString(<span class="s2">&quot;doc_email&quot;</span>, email[index]);
+                                bundle.putString(<span class="s2">&quot;doc_info&quot;</span>, doc_info[index]);
+                                bundle.putString(<span class="s2">&quot;message&quot;</span>, message[index]);
+                                bundle.putString(<span class="s2">&quot;second_phone&quot;</span>, second_phone[index]);
+                                bundle.putString(<span class="s2">&quot;days_available&quot;</span>, days_available[index]);
+                                bundle.putString(<span class="s2">&quot;hours&quot;</span>, hours[index]);
+
+                                bundle.putString(<span class="s2">&quot;USERNAME&quot;</span>, main_bundle.getString(<span class="s2">&quot;USERNAME&quot;</span>));
+                                bundle.putString(<span class="s2">&quot;SERVER_URL&quot;</span>, serverUrl);
+
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }, <span class="s0">new </span>Response.ErrorListener() {
+            @Override
+            <span class="s0">public void </span>onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        queue.add(stringRequest);
+
+    }
+    @Override
+    <span class="s0">public boolean </span>onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.private_doctors_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        materialSearchView.setMenuItem(item);
+        <span class="s0">return true</span>;
+    }
+
+    @Override
+    <span class="s0">public boolean </span>onOptionsItemSelected(MenuItem menuItem){
+
+        <span class="s0">if</span>(menuItem.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        <span class="s0">return true</span>;
+    }
+
+    <span class="s0">class </span>CustomAdapter <span class="s0">extends </span>BaseAdapter{
+
+        @Override
+        <span class="s0">public int </span>getCount() {
+            <span class="s0">return </span>firstname.length;
+        }
+
+        @Override
+        <span class="s0">public </span>Object getItem(<span class="s0">int </span>position) {
+            <span class="s0">return null</span>;
+        }
+
+        @Override
+        <span class="s0">public long </span>getItemId(<span class="s0">int </span>position) {
+            <span class="s0">return </span><span class="s3">0</span>;
+        }
+
+        @Override
+        <span class="s0">public </span>View getView(<span class="s0">int </span>position, View view, ViewGroup parent) {
+
+            view = getLayoutInflater().inflate(R.layout.layout, <span class="s0">null</span>, <span class="s0">true</span>);
+
+            ImageView imageView = (ImageView) view.findViewById(R.id.image);
+
+            TextView docName = (TextView) view.findViewById(R.id.profile_name);
+            TextView profession = (TextView) view.findViewById(R.id.proffession);
+            TextView ciTy = (TextView) view.findViewById(R.id.city);
+
+            docName.setText(<span class="s2">&quot;Dr. &quot;</span>+firstname[position] + <span class="s2">&quot; &quot; </span>+ lastname[position]);
+            profession.setText(<span class="s2">&quot;Specialty:</span><span class="s0">\t</span><span class="s2">&quot;</span>+proffession[position]);
+            ciTy.setText(<span class="s2">&quot;City:</span><span class="s0">\t</span><span class="s2">&quot;</span>+ city[position]);
+
+
+            <span class="s0">return </span>view;
+        }
+    }
+
+}
+</pre>
+</body>
+</html>

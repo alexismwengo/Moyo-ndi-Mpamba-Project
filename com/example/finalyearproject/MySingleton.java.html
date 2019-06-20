@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>MySingleton.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MySingleton.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>com.example.finalyearproject;
+
+<span class="s0">import </span>android.content.Context;
+
+<span class="s0">import </span>com.android.volley.Request;
+<span class="s0">import </span>com.android.volley.RequestQueue;
+<span class="s0">import </span>com.android.volley.toolbox.Volley;
+
+<span class="s0">public class </span>MySingleton {
+    <span class="s0">private static </span>MySingleton mInstance;
+    <span class="s0">private </span>RequestQueue requestQueue;
+    <span class="s0">private static </span>Context context;
+
+    <span class="s0">private </span>MySingleton(Context cntxt){
+        context = cntxt;
+        requestQueue = getRequestQueue();
+    }
+
+    <span class="s0">public static synchronized </span>MySingleton getInstance(Context context){
+        <span class="s0">if</span>(mInstance == <span class="s0">null</span>){
+            mInstance = <span class="s0">new </span>MySingleton(context);
+        }
+        <span class="s0">return </span>mInstance;
+    }
+
+    <span class="s0">public </span>RequestQueue getRequestQueue(){
+        <span class="s0">if</span>(requestQueue == <span class="s0">null</span>){
+            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        }
+        <span class="s0">return </span>requestQueue;
+    }
+
+    <span class="s0">public </span>&lt;T&gt;<span class="s0">void </span>addTorequestque(Request&lt;T&gt; request){
+        requestQueue.add(request);
+    }
+}
+</pre>
+</body>
+</html>

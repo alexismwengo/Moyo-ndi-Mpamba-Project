@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>ViewPagerAdapter.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ViewPagerAdapter.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>com.example.finalyearproject;
+
+<span class="s0">import </span>android.os.Bundle;
+<span class="s0">import </span>android.provider.SyncStateContract;
+<span class="s0">import </span>android.support.annotation.Nullable;
+<span class="s0">import </span>android.support.v4.app.Fragment;
+<span class="s0">import </span>android.support.v4.app.FragmentManager;
+<span class="s0">import </span>android.support.v4.app.FragmentPagerAdapter;
+
+<span class="s0">import </span>java.util.ArrayList;
+<span class="s0">import </span>java.util.List;
+
+<span class="s0">public class </span>ViewPagerAdapter <span class="s0">extends </span>FragmentPagerAdapter {
+    <span class="s0">private final </span>List&lt;Fragment&gt; fragmentList = <span class="s0">new </span>ArrayList&lt;&gt;();
+    <span class="s0">private final </span>List&lt;String&gt; fragmentListTitles = <span class="s0">new </span>ArrayList&lt;&gt;();
+
+    <span class="s0">public </span>ViewPagerAdapter(FragmentManager fm) {
+        <span class="s0">super</span>(fm);
+    }
+
+    @Override
+    <span class="s0">public </span>Fragment getItem(<span class="s0">int </span>i) {
+        <span class="s0">return </span>fragmentList.get(i);
+    }
+
+    @Override
+    <span class="s0">public int </span>getCount() {
+        <span class="s0">return </span>fragmentListTitles.size();
+    }
+
+    @Nullable
+    @Override
+    <span class="s0">public </span>CharSequence getPageTitle(<span class="s0">int </span>position) {
+        <span class="s0">return </span>fragmentListTitles.get(position);
+    }
+
+    <span class="s0">public  void </span>addFragment(Fragment fragment, String title){
+        fragmentList.add(fragment);
+        fragmentListTitles.add(title);
+    }
+
+}
+</pre>
+</body>
+</html>

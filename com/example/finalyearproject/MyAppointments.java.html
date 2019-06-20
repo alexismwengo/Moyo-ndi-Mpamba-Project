@@ -1,0 +1,368 @@
+<html>
+<head>
+<title>MyAppointments.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #008000; font-weight: bold;}
+.s3 { color: #0000ff;}
+.s4 { color: #808080; font-style: italic;}
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MyAppointments.java</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span>com.example.finalyearproject;
+
+<span class="s0">import </span>android.content.DialogInterface;
+<span class="s0">import </span>android.content.Intent;
+<span class="s0">import </span>android.graphics.drawable.Drawable;
+<span class="s0">import </span>android.support.v7.app.ActionBar;
+<span class="s0">import </span>android.support.v7.app.AlertDialog;
+<span class="s0">import </span>android.support.v7.app.AppCompatActivity;
+<span class="s0">import </span>android.os.Bundle;
+<span class="s0">import </span>android.support.v7.widget.Toolbar;
+<span class="s0">import </span>android.view.MenuItem;
+<span class="s0">import </span>android.view.View;
+<span class="s0">import </span>android.view.ViewGroup;
+<span class="s0">import </span>android.widget.AdapterView;
+<span class="s0">import </span>android.widget.BaseAdapter;
+<span class="s0">import </span>android.widget.ImageButton;
+<span class="s0">import </span>android.widget.ImageView;
+<span class="s0">import </span>android.widget.ListView;
+<span class="s0">import </span>android.widget.TextView;
+<span class="s0">import </span>android.widget.Toast;
+
+<span class="s0">import </span>com.android.volley.AuthFailureError;
+<span class="s0">import </span>com.android.volley.Request;
+<span class="s0">import </span>com.android.volley.RequestQueue;
+<span class="s0">import </span>com.android.volley.Response;
+<span class="s0">import </span>com.android.volley.VolleyError;
+<span class="s0">import </span>com.android.volley.toolbox.StringRequest;
+<span class="s0">import </span>com.android.volley.toolbox.Volley;
+
+<span class="s0">import </span>org.json.JSONArray;
+<span class="s0">import </span>org.json.JSONException;
+<span class="s0">import </span>org.json.JSONObject;
+
+<span class="s0">import </span>java.text.ParseException;
+<span class="s0">import </span>java.text.SimpleDateFormat;
+<span class="s0">import </span>java.util.ArrayList;
+<span class="s0">import </span>java.util.Arrays;
+<span class="s0">import </span>java.util.Date;
+<span class="s0">import </span>java.util.HashMap;
+<span class="s0">import </span>java.util.Map;
+
+<span class="s0">public class </span>MyAppointments <span class="s0">extends </span>AppCompatActivity {
+    <span class="s0">private </span>Toolbar toolbar;
+    <span class="s0">private  </span>Bundle bundle;
+    <span class="s0">private </span>ListView listView;
+    <span class="s0">private </span>String theName, serverUrl, app_id;
+    <span class="s0">private </span>String [] user_name, user_age, date, appointment_id, user_address, user_message, appointment_state, appointment_time, name, phone, city, sent_to;
+    <span class="s0">private </span>TextView patientName, appointments_total, appointments_confirmed, name_label, address, book_title, book_date, phone_label, app_report, idd;
+    <span class="s0">private </span>TextView deleteApp;
+
+    @Override
+    <span class="s0">protected void </span>onCreate(Bundle savedInstanceState) {
+        <span class="s0">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_appointments);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        <span class="s0">final </span>ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(<span class="s0">true</span>);
+
+        listView = (ListView) findViewById(R.id.list_appointment);
+
+        bundle = getIntent().getExtras();
+        serverUrl = bundle.getString(<span class="s2">&quot;SERVER_URL&quot;</span>);
+        theName = bundle.getString(<span class="s2">&quot;USERNAME&quot;</span>);
+
+        patientName = (TextView) findViewById(R.id.patient_name);
+        patientName.setText(theName);
+
+        appointments_total = (TextView) findViewById(R.id.all_appointments);
+        appointments_confirmed = (TextView) findViewById(R.id.confirmed);
+
+        StringRequest stringRequest3 = <span class="s0">new </span>StringRequest(Request.Method.POST, serverUrl+<span class="s2">&quot;AccessUserAppointments.php&quot;</span>,
+                <span class="s0">new </span>Response.Listener&lt;String&gt;() {
+                    @Override
+                    <span class="s0">public void </span>onResponse(String response) {
+
+                        <span class="s0">if</span>(response.equals(<span class="s2">&quot;No Appointments for such user&quot;</span>)){
+                            String name = <span class="s2">&quot;No Appointments for &quot;</span>+theName.toUpperCase();
+                            Toast.makeText(getApplicationContext(), name, Toast.LENGTH_LONG).show();
+                        }
+                        <span class="s0">else</span>{
+                            <span class="s0">try </span>{
+                                JSONArray jsonArray = <span class="s0">new </span>JSONArray(response);
+
+                                JSONObject jsonObject = <span class="s0">null</span>;
+
+                                appointment_time = <span class="s0">new </span>String[jsonArray.length()];
+                                appointment_state =  <span class="s0">new </span>String[jsonArray.length()];
+
+                                user_name = <span class="s0">new </span>String[jsonArray.length()];
+                                user_age =  <span class="s0">new </span>String[jsonArray.length()];
+                                date =  <span class="s0">new </span>String[jsonArray.length()];
+                                appointment_id =<span class="s0">new </span>String[jsonArray.length()];
+                                user_address =  <span class="s0">new </span>String[jsonArray.length()];
+                                user_message =  <span class="s0">new </span>String[jsonArray.length()];
+                                name =  <span class="s0">new </span>String[jsonArray.length()];
+                                phone =  <span class="s0">new </span>String[jsonArray.length()];
+                                city =  <span class="s0">new </span>String[jsonArray.length()];
+                                sent_to =  <span class="s0">new </span>String[jsonArray.length()];
+
+                                <span class="s0">for</span>(<span class="s0">int </span>i=<span class="s3">0</span>; i&lt;jsonArray.length(); i++){
+                                    jsonObject = jsonArray.getJSONObject(i);
+
+                                    user_name[i] = jsonObject.getString(<span class="s2">&quot;user_name&quot;</span>);
+                                    user_age[i] = jsonObject.getString(<span class="s2">&quot;user_age&quot;</span>);
+                                    date[i] = jsonObject.getString(<span class="s2">&quot;date&quot;</span>);
+                                    appointment_id[i] = jsonObject.getString(<span class="s2">&quot;appointment_id&quot;</span>);
+                                    user_address[i] = jsonObject.getString(<span class="s2">&quot;user_address&quot;</span>);
+                                    user_message[i] = jsonObject.getString(<span class="s2">&quot;user_message&quot;</span>);
+
+                                    appointment_time[i] = jsonObject.getString(<span class="s2">&quot;appointment_time&quot;</span>);
+                                    appointment_state[i] =  jsonObject.getString(<span class="s2">&quot;appointment_state&quot;</span>);
+
+                                    name[i] = jsonObject.getString(<span class="s2">&quot;name&quot;</span>);
+                                    phone[i] = jsonObject.getString(<span class="s2">&quot;phone&quot;</span>);
+                                    sent_to[i] = jsonObject.getString(<span class="s2">&quot;sent_to&quot;</span>);
+                                    city[i] = jsonObject.getString(<span class="s2">&quot;city&quot;</span>);
+
+                                }
+
+                            } <span class="s0">catch </span>(JSONException e) {
+                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+
+                            CustomAdapter customAdapter = <span class="s0">new </span>CustomAdapter();
+                            listView.setAdapter(customAdapter);
+
+                            appointments_total.setText(<span class="s2">&quot;All Appointments (&quot;</span>+user_name.length+<span class="s2">&quot;)&quot;</span>);
+
+                            listView.setOnItemClickListener(<span class="s0">new </span>AdapterView.OnItemClickListener() {
+                                @Override
+                                <span class="s0">public void </span>onItemClick(AdapterView&lt;?&gt; parent, View view, <span class="s0">int </span>position, <span class="s0">long </span>id) {
+
+                                    <span class="s0">final </span>String i_d = idd.getText().toString().substring(idd.getText().toString().lastIndexOf(<span class="s2">&quot; &quot;</span>));
+
+                                    deleteApp = findViewById(R.id.delete_appointment);
+                                    deleteApp.setOnClickListener(<span class="s0">new </span>View.OnClickListener() {
+                                        @Override
+                                        <span class="s0">public void </span>onClick(View v) {
+                                            <span class="s4">//Toast.makeText(getApplicationContext(), &quot;Appointment #: &quot;+i_d, Toast.LENGTH_LONG).show();</span>
+
+                                            AlertDialog.Builder builder = <span class="s0">new </span>AlertDialog.Builder(MyAppointments.<span class="s0">this</span>);
+                                            builder.setTitle(<span class="s2">&quot;Confirm Delete&quot;</span>);
+                                            builder.setMessage(<span class="s2">&quot;Appointment id no. &quot;</span>+i_d+<span class="s2">&quot; will be deleted from the system.&quot;</span>);
+                                            builder.setPositiveButton(<span class="s2">&quot;Delete&quot;</span>, <span class="s0">new </span>DialogInterface.OnClickListener() {
+                                                @Override
+                                                <span class="s0">public void </span>onClick(DialogInterface dialog, <span class="s0">int </span>which) {
+                                                    StringRequest stringRequest4 = <span class="s0">new </span>StringRequest(Request.Method.POST, serverUrl+<span class="s2">&quot;DeleteAppointment.php&quot;</span>,
+                                                            <span class="s0">new </span>Response.Listener&lt;String&gt;() {
+                                                                @Override
+                                                                <span class="s0">public void </span>onResponse(<span class="s0">final </span>String response) {
+                                                                    AlertDialog.Builder builder1 = <span class="s0">new </span>AlertDialog.Builder(MyAppointments.<span class="s0">this</span>);
+                                                                    builder1.setTitle(<span class="s2">&quot;Server Response&quot;</span>);
+                                                                    builder1.setMessage(response);
+
+                                                                    builder1.setPositiveButton(<span class="s2">&quot;Ok&quot;</span>, <span class="s0">new </span>DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        <span class="s0">public void </span>onClick(DialogInterface dialog, <span class="s0">int </span>which) {
+                                                                            <span class="s4">//Toast.makeText(getApplicationContext(),&quot;Delete Successfull&quot;, Toast.LENGTH_SHORT).show();</span>
+                                                                        }
+                                                                    });
+                                                                    AlertDialog alertDialog1 = builder1.create();
+                                                                    alertDialog1.show();
+                                                                }
+                                                            }
+                                                            , <span class="s0">new </span>Response.ErrorListener(){
+                                                        @Override
+                                                        <span class="s0">public void </span>onErrorResponse(VolleyError error){
+                                                            Toast.makeText(getApplicationContext(), <span class="s2">&quot;Connection Error&quot;</span>+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }){
+                                                        @Override
+                                                        <span class="s0">protected </span>Map&lt;String, String&gt; getParams() <span class="s0">throws </span>AuthFailureError {
+
+                                                            Map&lt;String, String&gt; params = <span class="s0">new </span>HashMap&lt;String, String&gt;();
+                                                            params.put(<span class="s2">&quot;appointment_id&quot;</span>, i_d);
+
+                                                            <span class="s0">return </span>params;
+                                                        }
+                                                    };
+
+                                                    <a href="MySingleton.java.html">MySingleton</a>.getInstance(MyAppointments.<span class="s0">this</span>).addTorequestque(stringRequest4);
+                                                }
+                                            });
+                                            AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                        }
+                                    });
+
+                                }
+                            });
+                        }
+
+
+                    }
+                }, <span class="s0">new </span>Response.ErrorListener(){
+            @Override
+            <span class="s0">public void </span>onErrorResponse(VolleyError error){
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+            }
+        }){
+            @Override
+            <span class="s0">protected </span>Map&lt;String, String&gt; getParams() <span class="s0">throws </span>AuthFailureError {
+
+                Map&lt;String, String&gt; params = <span class="s0">new </span>HashMap&lt;String, String&gt;();
+                params.put(<span class="s2">&quot;user_name&quot;</span>, theName);
+                <span class="s0">return </span>params;
+            }
+        };
+
+        <a href="MySingleton.java.html">MySingleton</a>.getInstance(getApplicationContext()).addTorequestque(stringRequest3);
+
+    }
+    @Override
+    <span class="s0">public boolean </span>onOptionsItemSelected(MenuItem menuItem){
+
+        <span class="s0">if</span>(menuItem.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        <span class="s0">return true</span>;
+    }
+
+    <span class="s0">class </span>CustomAdapter <span class="s0">extends </span>BaseAdapter {
+
+        @Override
+        <span class="s0">public int </span>getCount() {
+            <span class="s0">return </span>user_name.length;
+        }
+
+        @Override
+        <span class="s0">public </span>Object getItem(<span class="s0">int </span>position) {
+            <span class="s0">return null</span>;
+        }
+
+        @Override
+        <span class="s0">public long </span>getItemId(<span class="s0">int </span>position) {
+            <span class="s0">return </span><span class="s3">0</span>;
+        }
+
+        @Override
+        <span class="s0">public </span>View getView(<span class="s0">int </span>position, View view, ViewGroup parent) {
+
+            view = getLayoutInflater().inflate(R.layout.list_layout, <span class="s0">null</span>, <span class="s0">true</span>);
+
+            name_label = (TextView) view.findViewById(R.id.booked_doc);
+            address = (TextView) view.findViewById(R.id.booked_doc_address);
+            book_title = (TextView) view.findViewById(R.id.booking_title);
+            book_date = (TextView) view.findViewById(R.id.booking_date);
+            phone_label = (TextView) view.findViewById(R.id.booked_doc_phone);
+            app_report = (TextView) view.findViewById(R.id.app_report);
+            idd = (TextView) view.findViewById(R.id.app_id);
+
+            TextView details_label = (TextView) view.findViewById(R.id.details_label);
+            <span class="s0">if</span>(sent_to[position].equals(<span class="s2">&quot;Health Facility&quot;</span>)){
+                details_label.setText(<span class="s2">&quot;Hospital Details&quot;</span>);
+
+                Drawable img = getApplicationContext().getResources().getDrawable( R.drawable.ic_business);
+                name_label.setCompoundDrawablesWithIntrinsicBounds( img, <span class="s0">null</span>, <span class="s0">null</span>, <span class="s0">null</span>);
+            }
+
+            TextView appointments_time = (TextView) view.findViewById(R.id.booked_time);
+            appointments_time.setText(appointment_time[position]);
+
+            book_date.setText(date[position]);
+
+            String datePassed = <span class="s2">&quot;&quot;</span>;
+            Date bookedDate = <span class="s0">null</span>;
+            <span class="s0">try </span>{
+                bookedDate = <span class="s0">new </span>SimpleDateFormat(<span class="s2">&quot;yyyy-MM-dd&quot;</span>).parse(date[position]);
+            }<span class="s0">catch </span>(ParseException e){
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            <span class="s0">if</span>(<span class="s0">new </span>Date().after(bookedDate)){
+                datePassed = <span class="s2">&quot;Passed&quot;</span>;
+            }
+            <span class="s0">else if </span>(bookedDate.after(<span class="s0">new </span>Date())){
+                datePassed = <span class="s2">&quot;Not Passed&quot;</span>;
+            }
+
+            TextView app_state = (TextView) view.findViewById(R.id.app_state);
+
+            String statee = appointment_state[position];
+            <span class="s0">if</span>(statee.equals(<span class="s2">&quot;0&quot;</span>) &amp;&amp; datePassed.equals(<span class="s2">&quot;Not Passed&quot;</span>)){
+                statee = <span class="s2">&quot;[Awaiting Doc. Confirmation]&quot;</span>;
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;1&quot;</span>) &amp;&amp; datePassed.equals(<span class="s2">&quot;Not Passed&quot;</span>)){
+                statee = <span class="s2">&quot;[Confirmed]&quot;</span>;
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;1&quot;</span>) &amp;&amp; datePassed.equals(<span class="s2">&quot;Passed&quot;</span>)){
+                statee = <span class="s2">&quot;[Concluded]&quot;</span>;
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;0&quot;</span>) &amp;&amp; datePassed.equals(<span class="s2">&quot;Passed&quot;</span>)){
+                statee = <span class="s2">&quot;[Never Confirmed]&quot;</span>;
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;3&quot;</span>)){
+                statee = <span class="s2">&quot;[Rejected]&quot;</span>;
+            }
+            app_state.setText(statee);
+
+            String full_name = name[position];
+            <span class="s0">if</span>(full_name.length() &gt; <span class="s3">15</span>){
+                full_name = full_name.substring(<span class="s3">0</span>, <span class="s3">15</span>);
+                name_label.setText(full_name+<span class="s2">&quot;...&quot;</span>);
+            }<span class="s0">else </span>{
+                name_label.setText(name[position]);
+            }
+
+            app_id = appointment_id[position];
+            idd.setText(<span class="s2">&quot;Appointment Id:</span><span class="s0">\t</span><span class="s2">&quot;</span>+ appointment_id[position]);
+
+            String title = user_message[position];
+            <span class="s0">if</span>(title.length() &gt; <span class="s3">15</span>){
+                title = title.substring(<span class="s3">0</span>, <span class="s3">15</span>);
+                book_title.setText(title+<span class="s2">&quot;...&quot;</span>);
+            }<span class="s0">else </span>{
+                book_title.setText(user_message[position]);
+            }
+
+            address.setText(city[position]);
+            phone_label.setText(phone[position]);
+
+            <span class="s0">if</span>(statee.equals(<span class="s2">&quot;[Awaiting Doc. Confirmation]&quot;</span>)){
+                app_report.setText(<span class="s2">&quot;---&quot;</span>);
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;[Confirmed]&quot;</span>)){
+                app_report.setText(<span class="s2">&quot;Appointment On&quot;</span>);
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;[Concluded]&quot;</span>)){
+                app_report.setText(<span class="s2">&quot;Done (Success)&quot;</span>);
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;[Never Confirmed]&quot;</span>)){
+                app_report.setText(<span class="s2">&quot;Date Passed (---)&quot;</span>);
+            }
+            <span class="s0">else if</span>(statee.equals(<span class="s2">&quot;[Rejected]&quot;</span>)){
+                app_report.setText(<span class="s2">&quot;Appo. was Rejected)&quot;</span>);
+            }
+
+            <span class="s0">return </span>view;
+        }
+    }
+}
+</pre>
+</body>
+</html>

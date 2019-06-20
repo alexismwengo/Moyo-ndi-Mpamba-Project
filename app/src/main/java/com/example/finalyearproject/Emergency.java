@@ -446,7 +446,12 @@ public class Emergency extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
         if(menuItem.getItemId() == android.R.id.home){
-            onBackPressed();
+            Intent intent = new Intent(Emergency.this, LoginActivity.class);
+            Bundle b = new Bundle();
+            b.putString("SERVER_URL", serverUrl);
+            b.putString("activity", "Emergency");
+            intent.putExtras(b);
+            startActivity(intent);
         }
 
         if(menuItem.getItemId() == R.id.send_emergency_report){

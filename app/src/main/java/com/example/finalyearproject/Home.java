@@ -96,8 +96,6 @@ public class Home extends AppCompatActivity {
             }
         });
 
-
-
         myAppointments = (CardView) findViewById(R.id.my_appointments);
         myAppointments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +189,12 @@ public class Home extends AppCompatActivity {
                         return true;
                     case R.id.logout:
                         menuItem.setChecked(true);
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        Intent intent = new Intent(Home.this, LoginActivity.class);
+                        Bundle b = new Bundle();
+                        b.putString("SERVER_URL", serverUrl);
+                        b.putString("activity", "Home");
+                        intent.putExtras(b);
+                        startActivity(intent);
                         return true;
                 }
                 return false;
@@ -230,7 +233,12 @@ public class Home extends AppCompatActivity {
             drawerLayout.closeDrawers();
         }
         else{
-            super.onBackPressed();
+            Intent intent = new Intent(Home.this, LoginActivity.class);
+            Bundle b = new Bundle();
+            b.putString("SERVER_URL", serverUrl);
+            b.putString("activity", "Home");
+            intent.putExtras(b);
+            startActivity(intent);
         }
     }
 }

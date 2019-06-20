@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.service.autofill.Validator;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,8 @@ public class ActivitySignUp extends AppCompatActivity {
     private TextView terms, policy;
     private  Bundle bundle;
     private Toolbar toolbar;
+    private String serverUrl, ip_address;
+    private  int errorCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class ActivitySignUp extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         bundle = getIntent().getExtras();
-        final String serverUrl = bundle.getString("SERVER_URL");
+        serverUrl = bundle.getString("SERVER_URL");
 
         OnClickListener toPrivacy= new View.OnClickListener(){
             @Override
@@ -109,7 +113,14 @@ public class ActivitySignUp extends AppCompatActivity {
                                             emailField.setText("");
                                             passwordField.setText("");
                                             confirmPasswordField.setText("");
-                                            startActivity(new Intent(ActivitySignUp.this, LoginActivity.class));
+
+                                            Intent intent = new Intent(ActivitySignUp.this, LoginActivity.class);
+                                            Bundle b = new Bundle();
+                                            b.putString("SERVER_URL", serverUrl);
+                                            b.putString("activity", "ActivitySignUp");
+                                            intent.putExtras(b);
+                                            startActivity(intent);
+
                                         }
                                     });
                                     AlertDialog alertDialog = builder.create();
@@ -121,7 +132,25 @@ public class ActivitySignUp extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error){
                             Toast.makeText(ActivitySignUp.this, error.toString(), Toast.LENGTH_SHORT).show();
-                            error.printStackTrace();
+                            if(error.toString().startsWith("com.android.volley.TimeoutError")){
+                                errorCount++;
+                                if(errorCount == 2){
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivitySignUp.this);
+                                    builder.setTitle("Connection Unspecified");
+                                    builder.setIcon(R.drawable.ic_cancel);
+                                    builder.setMessage("Looks like you haven't specified a route (IP Address) to your server\n"+
+                                            "Click on \"Specify Server\" in the menu bar.");
+                                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            errorCount = 0;
+                                        }
+                                    });
+
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                }
+                            }
                         }
                     }){
                         @Override
@@ -187,15 +216,96 @@ public class ActivitySignUp extends AppCompatActivity {
             startActivity(i);
         }
         if(menuItem.getItemId() == android.R.id.home){
-            onBackPressed();
+            Intent intent = new Intent(ActivitySignUp.this, LoginActivity.class);
+            Bundle b = new Bundle();
+
+            b.putString("SERVER_URL", serverUrl);
+            b.putString("activity", "ActivitySignUp");
+            intent.putExtras(b);
+            startActivity(intent);
         }
         if(menuItem.getItemId() == R.id.have_account){
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
+        if(menuItem.getItemId() == R.id.configure_internet){
+            getServerAddress();
+            //return true;
+        }
+        if(menuItem.getItemId() == R.id.configuration_help){
+
+            return true;
+        }
         return true;
     }
 
+    private void getServerAddress() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActivitySignUp.this);
+        builder.setTitle("Specify Server");
+        builder.setIcon(R.drawable.ic_edit);
+        builder.setMessage("\nProvide Server's IP (v4) address (Address is of the form: xxx.xxx.xxx.xxx):\n");
 
+
+        final EditText input = new EditText(ActivitySignUp.this);
+        input.setHint(serverUrl.substring(7, serverUrl.lastIndexOf("/")));
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        lp2.setMargins(20, 2, 20, 2);
+        input.setLayoutParams(lp2);
+        builder.setView(input);
+
+        /*input.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                return false;
+            }
+        });*/
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(input.getText().toString().trim().length() > 0){
+                    ip_address = input.getText().toString().trim();
+                    String arr [] = ip_address.split("[.]");
+                    if(arr.length == 4){
+                        serverUrl = "http://"+input.getText().toString().trim()+"/";
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Wrong IP address", Toast.LENGTH_LONG).show();
+                        //input.setCompoundDrawables(null, null, android.drawable.ic_info_outline, null);
+                    }
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "No address provided!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Toast.makeText(getApplicationContext(), "No IP address provided!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNeutralButton("More Help", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ActivitySignUp.this, LoginActivity.class);
+        Bundle b = new Bundle();
+
+        b.putString("SERVER_URL", serverUrl);
+        b.putString("activity", "ActivitySignUp");
+        intent.putExtras(b);
+        startActivity(intent);
+    }
 }
 

@@ -9,17 +9,6 @@
 
     </item>
     <item
-        android:id="@+id/have_account"
-        android:title="Registered?"
-        app:showAsAction="never">
-
-    </item>
-    <item
-        android:id="@+id/terms"
-        android:title="@string/terms_and_conditions"
-        app:showAsAction="never">
-    </item>
-    <item
         android:id="@+id/configuration_help"
         android:title="How To?"
         app:showAsAction="never">

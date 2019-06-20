@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         final Thread thread=new Thread(){
             public void run(){
                 try{
-                    sleep(2900);
+                    sleep(2300);
                     startNewActivity();
 
                 }catch(InterruptedException e){}
@@ -22,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
     public void startNewActivity(){
-        startActivity(new Intent(this, LoginActivity.class));
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Bundle b = new Bundle();
+
+        b.putString("activity", "MainActivity");
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }

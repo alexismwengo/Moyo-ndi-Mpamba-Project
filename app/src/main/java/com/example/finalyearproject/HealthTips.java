@@ -170,7 +170,7 @@ public class HealthTips extends AppCompatActivity {
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
-
+                    lp.setMargins(20, 2, 20, 2);
                     sorter.setLayoutParams(lp);
                     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.sort_tips_array,
                             android.R.layout.simple_spinner_item);

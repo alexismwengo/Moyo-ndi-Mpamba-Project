@@ -20,7 +20,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".HealthCentreDetails"></activity>
+
+        <activity
+            android:name=".HealthCentreDetails"></activity>
         <activity
             android:name=".MyAppointments"
             android:label="Appointments" />
@@ -37,16 +39,19 @@
         <activity
             android:name=".AppointmentBooker"
             android:label="@string/patient_form" />
-        <activity android:name=".DoctorDetails" />
+        <activity
+            android:name=".DoctorDetails" />
         <activity
             android:name=".PrivateDoctors"
             android:label="@string/doc_list" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/log_in" />
+            android:label="@string/log_in"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Home"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ActivitySignUp"
             android:label="@string/sign_up" />

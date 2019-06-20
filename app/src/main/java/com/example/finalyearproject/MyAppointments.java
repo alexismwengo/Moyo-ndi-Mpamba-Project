@@ -140,7 +140,7 @@ public class MyAppointments extends AppCompatActivity {
                                     deleteApp.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Toast.makeText(getApplicationContext(), "Appointment #: "+i_d, Toast.LENGTH_LONG).show();
+                                            //Toast.makeText(getApplicationContext(), "Appointment #: "+i_d, Toast.LENGTH_LONG).show();
 
                                             AlertDialog.Builder builder = new AlertDialog.Builder(MyAppointments.this);
                                             builder.setTitle("Confirm Delete");

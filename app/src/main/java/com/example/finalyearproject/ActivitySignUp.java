@@ -230,10 +230,15 @@ public class ActivitySignUp extends AppCompatActivity {
         }
         if(menuItem.getItemId() == R.id.configure_internet){
             getServerAddress();
-            //return true;
+            return true;
         }
         if(menuItem.getItemId() == R.id.configuration_help){
-
+            Intent intent = new Intent(ActivitySignUp.this, ConfigurationHelp.class);
+            Bundle b = new Bundle();
+            b.putString("SERVER_URL", serverUrl);
+            b.putString("activity", "ActivitySignUp");
+            intent.putExtras(b);
+            startActivity(intent);
             return true;
         }
         return true;

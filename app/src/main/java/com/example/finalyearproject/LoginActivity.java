@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         String activity_from = bundle.getString("activity");
-        if(activity_from.equals("ActivitySignUp") || activity_from.equals("Emergency") || activity_from.equals("Home")){
+        if(activity_from.equals("ActivitySignUp") || activity_from.equals("Emergency") || activity_from.equals("Home") || activity_from.equals("ConfigurationHelp")){
             ServerUrl = bundle.getString("SERVER_URL");
         }
 
@@ -85,7 +85,12 @@ public class LoginActivity extends AppCompatActivity {
             //return true;
         }
         if(menuItem.getItemId() == R.id.configuration_help){
-
+            Intent intent = new Intent(LoginActivity.this, ConfigurationHelp.class);
+            Bundle b = new Bundle();
+            b.putString("SERVER_URL", ServerUrl);
+            b.putString("activity", "LoginActivity");
+            intent.putExtras(b);
+            startActivity(intent);
             return true;
         }
         return true;

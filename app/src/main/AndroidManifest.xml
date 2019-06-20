@@ -20,9 +20,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
-            android:name=".HealthCentreDetails"></activity>
+            android:name=".ConfigurationHelp"
+            android:label="Configure Network"></activity>
+        <activity android:name=".HealthCentreDetails" />
         <activity
             android:name=".MyAppointments"
             android:label="Appointments" />
@@ -32,15 +33,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LocalHospitals"
-            android:label="Health Centres"/>
+            android:label="Health Centres" />
         <activity
             android:name=".Emergency"
             android:label="@string/report_emergency" />
         <activity
             android:name=".AppointmentBooker"
             android:label="@string/patient_form" />
-        <activity
-            android:name=".DoctorDetails" />
+        <activity android:name=".DoctorDetails" />
         <activity
             android:name=".PrivateDoctors"
             android:label="@string/doc_list" />
@@ -51,7 +51,7 @@
         <activity
             android:name=".Home"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ActivitySignUp"
             android:label="@string/sign_up" />

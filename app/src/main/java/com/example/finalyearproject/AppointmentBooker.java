@@ -52,6 +52,7 @@ public class AppointmentBooker extends AppCompatActivity {
     private RadioGroup radioGroup, radioGroup2;
     private EditText patient_name, patient_age, patient_phone, patient_address, additional_comments;
     private Calendar myCalendar;
+    private int error_count = 0;
     private String serverUrl, activityFrom;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,8 @@ public class AppointmentBooker extends AppCompatActivity {
                             @Override
                             public void onResponse(final String response) {
 
+                                error_count = 0;
+
                                 if(response.equals("Booking Successful")){
                                     builder.setMessage(response+"\nAwait Doctor Confirmation.");
                                 }
@@ -206,7 +209,11 @@ public class AppointmentBooker extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error){
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
+                        error_count++;
+                        if(error_count == 2){
+                            error_count = 0;
+                            Toast.makeText(getApplicationContext(), "Please select both Date and Time Slot for the appointment", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }){
                     @Override

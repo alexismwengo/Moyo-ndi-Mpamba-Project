@@ -78,7 +78,7 @@
                                     android:id="@+id/password"
                                     android:drawablePadding="7dp"
                                     android:layout_width="250dp"
-                                    android:layout_height="45dp"
+                                    android:layout_height="wrap_content"
                                     android:hint="@string/password"
                                     android:textCursorDrawable="@null"
                                     android:inputType="textPassword"
@@ -97,8 +97,8 @@
                             android:orientation="vertical">
                             <Button
                                 android:id="@+id/login"
-                                android:layout_width="120dp"
-                                android:layout_height="40dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentTop="true"
                                 android:text="@string/login_button"
                                 android:textAllCaps="false" />

@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:textSize="13sp"
-                    android:text="Or you can access the individual files from github. Follow the link below:"
+                    android:text="The files can as well be accessed from github. Follow the link below:"
                     android:layout_marginTop="4dp"
                     android:padding="10dp"/>
                 <TextView
@@ -55,9 +55,9 @@
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="casual"
+                    android:fontFamily="sans-serif-light"
                     android:textStyle="bold|italic"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:padding="4dp"/>
 
             </RelativeLayout>
